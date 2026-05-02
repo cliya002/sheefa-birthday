@@ -489,6 +489,10 @@ function heartBurst(count = 20) {
     messageSection.setAttribute('aria-hidden', 'false');
     heartBurst(40);
 
+    // Kick off the blooming tree + typewriter sequence
+    startBloomTree();
+    startTypewriter();
+
     // Scroll smoothly to the message
     setTimeout(() => {
       messageSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -499,6 +503,233 @@ function heartBurst(count = 20) {
     btn.style.cursor = 'default';
   });
 })();
+
+/* ====== Blooming tree animation ======
+ * Draws the SVG trunk in, then fills the canopy with flowers, leaves,
+ * and hearts clustered along the branches. Butterflies drift around
+ * the whole tree so it feels alive.
+ */
+function startBloomTree() {
+  const tree = document.getElementById('bloomTree');
+  const layer = document.getElementById('bloomLayer');
+  const butterflyLayer = document.getElementById('bloomButterflies');
+  if (!tree || !layer) return;
+
+  // Reveal the tree container (CSS fades it in and animates the trunk)
+  tree.classList.add('growing');
+
+  // Clear any previous run
+  layer.innerHTML = '';
+  if (butterflyLayer) butterflyLayer.innerHTML = '';
+
+  const FLOWERS = ['🌸', '🌸', '🌹', '🌷', '🌺', '🌼', '💮', '🏵️'];
+  const LEAVES  = ['🍃', '🌿', '🍀'];
+  const HEARTS  = ['💖', '💕', '❤️', '💗', '💝'];
+  const BUTTERFLIES = ['🦋'];
+
+  // Foliage "clusters" — centers along real branches with a tight radius,
+  // so blooms follow the branch shape instead of filling a vague blob.
+  // Coordinates are in % of the stage (match the SVG branch endpoints).
+  const clusters = [
+    // Big left-side canopy cluster along the main left branch
+    { x: 18, y: 52, r: 8, density: 1.2 },
+    { x: 28, y: 60, r: 9, density: 1.1 },
+    { x: 38, y: 68, r: 7, density: 0.9 },
+    // Big right-side canopy cluster along the main right branch
+    { x: 82, y: 52, r: 8, density: 1.2 },
+    { x: 72, y: 60, r: 9, density: 1.1 },
+    { x: 62, y: 68, r: 7, density: 0.9 },
+    // Upper-left cluster (mid branch)
+    { x: 22, y: 38, r: 7, density: 1.0 },
+    { x: 30, y: 32, r: 6, density: 0.8 },
+    // Upper-right cluster (mid branch)
+    { x: 78, y: 38, r: 7, density: 1.0 },
+    { x: 70, y: 32, r: 6, density: 0.8 },
+    // Top spires
+    { x: 36, y: 22, r: 7, density: 0.9 },
+    { x: 64, y: 22, r: 7, density: 0.9 },
+    { x: 50, y: 18, r: 8, density: 1.0 },
+    // Central canopy filler
+    { x: 50, y: 42, r: 10, density: 1.1 },
+    { x: 44, y: 55, r: 8, density: 0.9 },
+    { x: 56, y: 55, r: 8, density: 0.9 },
+    // Outer tips — sparse blooms
+    { x: 15, y: 42, r: 5, density: 0.6 },
+    { x: 85, y: 42, r: 5, density: 0.6 },
+    { x: 14, y: 66, r: 4, density: 0.5 },
+    { x: 86, y: 66, r: 4, density: 0.5 },
+  ];
+
+  function randomSpotInCluster(cluster) {
+    // Gaussian-ish distribution: pull toward center so clusters look natural
+    const angle = Math.random() * Math.PI * 2;
+    const r1 = Math.random();
+    const r2 = Math.random();
+    const dist = Math.min(r1, r2) * cluster.r; // bias toward center
+    return {
+      x: cluster.x + Math.cos(angle) * dist,
+      y: cluster.y + Math.sin(angle) * dist
+    };
+  }
+
+  function spawnBloom(kind, cluster) {
+    const el = document.createElement('span');
+    el.className = 'bloom-item bloom-' + kind;
+    const pool = kind === 'flower' ? FLOWERS
+               : kind === 'leaf'   ? LEAVES
+               : kind === 'heart'  ? HEARTS
+               : BUTTERFLIES;
+    el.textContent = pool[Math.floor(Math.random() * pool.length)];
+
+    const spot = cluster ? randomSpotInCluster(cluster) : { x: 50, y: 40 };
+    el.style.left = spot.x + '%';
+    el.style.top  = spot.y + '%';
+    el.style.setProperty('--rot', (Math.random() * 50 - 25) + 'deg');
+    el.style.setProperty('--scale', (0.7 + Math.random() * 0.6).toFixed(2));
+    el.style.animationDelay = (Math.random() * 0.25) + 's';
+    // Gentle sway offset so not every bloom wiggles in sync
+    el.style.setProperty('--sway-delay', (Math.random() * 3) + 's');
+    layer.appendChild(el);
+  }
+
+  // Spawn a butterfly that drifts around the tree on a random path
+  function spawnTreeButterfly(delay) {
+    if (!butterflyLayer) return;
+    const el = document.createElement('span');
+    el.className = 'bloom-tree-butterfly';
+    el.textContent = BUTTERFLIES[Math.floor(Math.random() * BUTTERFLIES.length)];
+
+    // Pick a unique flight path for each butterfly (4 preset variants)
+    const pathIdx = Math.floor(Math.random() * 4) + 1;
+    el.classList.add('flight-' + pathIdx);
+    el.style.animationDelay = delay + 'ms';
+    el.style.fontSize = (1.3 + Math.random() * 0.7) + 'rem';
+    // Small per-butterfly hue wobble so they don't look identical
+    el.style.filter = `drop-shadow(0 3px 8px rgba(230, 58, 90, ${0.3 + Math.random() * 0.2})) hue-rotate(${Math.floor(Math.random() * 60 - 30)}deg)`;
+    butterflyLayer.appendChild(el);
+  }
+
+  // Detect mobile / reduced motion so we don't overwhelm low-end devices
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Per-cluster bloom budget — scales each cluster's density
+  const baseFlowersPerCluster = prefersReducedMotion ? 3 : (isMobile ? 6 : 10);
+  const baseLeavesPerCluster  = prefersReducedMotion ? 2 : (isMobile ? 3 : 5);
+  const heartCount     = prefersReducedMotion ? 8  : (isMobile ? 16 : 24);
+  const butterflyCount = prefersReducedMotion ? 2  : (isMobile ? 3  : 5);
+
+  const trunkDrawTime = 900;
+
+  // Leaves appear first (like new growth), then flowers bloom on top
+  let spawnTimer = trunkDrawTime;
+  clusters.forEach((cluster) => {
+    const leafCount = Math.round(baseLeavesPerCluster * cluster.density);
+    for (let i = 0; i < leafCount; i++) {
+      setTimeout(() => spawnBloom('leaf', cluster), spawnTimer);
+      spawnTimer += 18;
+    }
+  });
+
+  // Flowers bloom on top of the leaves
+  spawnTimer = trunkDrawTime + 400;
+  clusters.forEach((cluster) => {
+    const flowerCount = Math.round(baseFlowersPerCluster * cluster.density);
+    for (let i = 0; i < flowerCount; i++) {
+      setTimeout(() => spawnBloom('flower', cluster), spawnTimer);
+      spawnTimer += 20;
+    }
+  });
+
+  // Hearts sprinkled throughout for a loving vibe
+  for (let i = 0; i < heartCount; i++) {
+    const cluster = clusters[Math.floor(Math.random() * clusters.length)];
+    setTimeout(() => spawnBloom('heart', cluster), trunkDrawTime + 1200 + i * 60);
+  }
+
+  // Butterflies drift in from the sides, staggered over several seconds
+  for (let i = 0; i < butterflyCount; i++) {
+    spawnTreeButterfly(trunkDrawTime + 1500 + i * 600);
+  }
+}
+
+/* ====== Typewriter message ======
+ * Reveals each line character-by-character to look like someone is typing
+ * the birthday message live, line after line.
+ */
+function startTypewriter() {
+  const container = document.getElementById('typewriter');
+  if (!container || container.dataset.started === '1') return;
+  container.dataset.started = '1';
+
+  const lines = Array.from(container.querySelectorAll('.tw-line'));
+
+  // Respect reduced-motion: just show the full text with no typing animation
+  const prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    lines.forEach(line => {
+      line.textContent = line.getAttribute('data-text') || '';
+      line.classList.add('typed');
+    });
+    return;
+  }
+
+  // Slightly slower on the first line so it feels deliberate, then natural.
+  const CHAR_DELAY = 38;      // ms per character (faster — message is longer now)
+  const LINE_PAUSE = 300;     // ms between most lines
+  const PAUSE_LINE_DELAY = 900; // extra pause before lines with .tw-pause
+  const INITIAL_DELAY = 900;  // wait for tree to start blooming
+
+  // Active cursor element — we move it line to line
+  let cursor = document.createElement('span');
+  cursor.className = 'tw-cursor';
+  cursor.textContent = '|';
+
+  function typeLine(line, done) {
+    const text = line.getAttribute('data-text') || '';
+    line.classList.add('typing');
+    line.textContent = '';
+    line.appendChild(cursor);
+
+    // Split into characters, but handle emoji surrogate pairs / ZWJ sequences
+    // as single "characters" so emojis don't get torn apart mid-typing.
+    const chars = Array.from(text);
+    let i = 0;
+
+    function tick() {
+      if (i >= chars.length) {
+        line.classList.remove('typing');
+        line.classList.add('typed');
+        done();
+        return;
+      }
+      // Insert character before the cursor
+      line.insertBefore(document.createTextNode(chars[i]), cursor);
+      i++;
+      setTimeout(tick, CHAR_DELAY + (Math.random() * 30 - 15)); // slight jitter
+    }
+    tick();
+  }
+
+  function run(index) {
+    if (index >= lines.length) {
+      // Remove cursor once everything is typed
+      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+      return;
+    }
+    typeLine(lines[index], () => {
+      const nextLine = lines[index + 1];
+      const extra = (nextLine && nextLine.classList.contains('tw-pause'))
+        ? PAUSE_LINE_DELAY
+        : LINE_PAUSE;
+      setTimeout(() => run(index + 1), extra);
+    });
+  }
+
+  setTimeout(() => run(0), INITIAL_DELAY);
+}
 
 /* ====== Make a Wish button ====== */
 (function wishButton() {

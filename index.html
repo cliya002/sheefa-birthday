@@ -240,22 +240,111 @@
         <h3>This message unlocks on May 10th</h3>
         <p id="lockCountdown">Come back on your birthday, Sheefa 💕</p>
       </div>
+
+      <!-- Blooming tree animation that plays when unlocked -->
+      <div class="bloom-tree" id="bloomTree" aria-hidden="true">
+        <div class="bloom-tree-stage">
+          <!-- SVG tree with natural, organic branches -->
+          <svg class="bloom-tree-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMax meet">
+            <defs>
+              <linearGradient id="trunkGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%"   stop-color="#4a2e1c"/>
+                <stop offset="60%"  stop-color="#7a5238"/>
+                <stop offset="100%" stop-color="#a07555"/>
+              </linearGradient>
+              <radialGradient id="canopyGlow" cx="50%" cy="35%" r="50%">
+                <stop offset="0%"  stop-color="#ffe0ec" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffe0ec" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"  stop-color="#7fb36a"/>
+                <stop offset="100%" stop-color="#4a7a3a"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Soft canopy glow behind the branches -->
+            <ellipse cx="200" cy="150" rx="180" ry="130" fill="url(#canopyGlow)"/>
+
+            <!-- Ground / grass mound -->
+            <path class="bloom-ground" d="M 0 400 Q 100 370 200 378 Q 300 370 400 400 Z" fill="url(#grassGrad)" opacity="0.7"/>
+
+            <!-- Main trunk — tapered organic curve -->
+            <path class="bloom-trunk" d="M 200 400
+                     C 195 360, 188 320, 190 290
+                     C 192 260, 180 235, 182 210
+                     C 184 185, 192 160, 200 140"
+                  stroke="url(#trunkGrad)" stroke-width="26" stroke-linecap="round" fill="none"/>
+
+            <!-- Secondary trunk line for thickness variation -->
+            <path class="bloom-trunk" d="M 200 400
+                     C 205 360, 212 320, 210 290
+                     C 208 260, 220 235, 218 210
+                     C 216 185, 208 160, 200 140"
+                  stroke="url(#trunkGrad)" stroke-width="22" stroke-linecap="round" fill="none" opacity="0.85"/>
+
+            <!-- Main branches (thicker, curved naturally) -->
+            <path class="bloom-branch" d="M 190 290 C 165 280, 140 265, 115 250 C 95 240, 80 225, 70 205"
+                  stroke="url(#trunkGrad)" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <path class="bloom-branch" d="M 210 290 C 235 280, 260 265, 285 250 C 305 240, 320 225, 330 205"
+                  stroke="url(#trunkGrad)" stroke-width="12" stroke-linecap="round" fill="none"/>
+
+            <path class="bloom-branch" d="M 185 230 C 160 215, 135 200, 110 180 C 95 168, 85 150, 80 130"
+                  stroke="url(#trunkGrad)" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <path class="bloom-branch" d="M 215 230 C 240 215, 265 200, 290 180 C 305 168, 315 150, 320 130"
+                  stroke="url(#trunkGrad)" stroke-width="9" stroke-linecap="round" fill="none"/>
+
+            <!-- Upper branches reaching up -->
+            <path class="bloom-branch" d="M 195 180 C 180 150, 165 125, 150 100 C 142 85, 138 70, 140 55"
+                  stroke="url(#trunkGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <path class="bloom-branch" d="M 205 180 C 220 150, 235 125, 250 100 C 258 85, 262 70, 260 55"
+                  stroke="url(#trunkGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <path class="bloom-branch" d="M 200 170 C 200 130, 200 90, 200 55"
+                  stroke="url(#trunkGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+            <!-- Small twig branches for detail -->
+            <path class="bloom-twig" d="M 115 250 C 95 245, 78 240, 60 232" stroke="url(#trunkGrad)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 285 250 C 305 245, 322 240, 340 232" stroke="url(#trunkGrad)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 110 180 C 90 175, 75 168, 60 158" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 290 180 C 310 175, 325 168, 340 158" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 150 100 C 140 90, 128 80, 118 72" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 250 100 C 260 90, 272 80, 282 72" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 195 140 C 180 120, 168 105, 158 92" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path class="bloom-twig" d="M 205 140 C 220 120, 232 105, 242 92" stroke="url(#trunkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </svg>
+
+          <!-- Flowers / leaves / hearts spawn here; butterflies use a separate drift layer -->
+          <div class="bloom-layer" id="bloomLayer"></div>
+          <div class="bloom-butterflies" id="bloomButterflies"></div>
+          <!-- Grass tufts at the base -->
+          <div class="bloom-grass" aria-hidden="true">
+            <span>🌿</span><span>🌱</span><span>🌾</span><span>🌱</span><span>🌿</span><span>🌾</span><span>🌱</span>
+          </div>
+        </div>
+      </div>
+
       <div class="message-inner">
         <div class="message-ornament top-left">❧</div>
         <div class="message-ornament top-right">❧</div>
         <div class="message-ornament bottom-left">❧</div>
         <div class="message-ornament bottom-right">❧</div>
-        <p class="greeting">Happy birthday my Sheefa 🎂🥹</p>
 
-        <p>I don't even know where to start… I just want you to be truly happy. Not just today, but in every part of your life.</p>
-
-        <p>You deserve a kind of happiness that's calm, real, and lasting… the kind that doesn't fade. And I hope this year brings you nothing but peace, love, and everything beautiful you've been wishing for.</p>
-
-        <p>I'm really grateful I got to know you… you came into my life so unexpectedly, but somehow you became someone really special to me.</p>
-
-        <p>No matter where life takes us… I'll always wish the best for you, Sheefa. Stay exactly the way you are… because that's what made you so special to me in the first place ❤️🥹</p>
-
-        <p class="signature">Yours, always.</p>
+        <!-- Typewriter message — lines get filled in one by one -->
+        <div class="typewriter" id="typewriter" aria-live="polite">
+          <p class="tw-line" data-text="Hey you 💕"></p>
+          <p class="tw-line" data-text="Happy Birthday my Sheefa 🎂🥹"></p>
+          <p class="tw-line" data-text="May God bless you 🌿"></p>
+          <p class="tw-line" data-text="And give u many happiness 💕"></p>
+          <p class="tw-line tw-pause" data-text="I don't even know where to start…"></p>
+          <p class="tw-line" data-text="I just want you to be truly happy. Not just today, but in every part of your life."></p>
+          <p class="tw-line" data-text="You deserve a kind of happiness that's calm, real, and lasting… the kind that doesn't fade."></p>
+          <p class="tw-line" data-text="I hope this year brings you nothing but peace, love, and everything beautiful you've been wishing for. 🌸"></p>
+          <p class="tw-line" data-text="I'm really grateful I got to know you… you came into my life so unexpectedly, but somehow you became someone really special to me. 🌷"></p>
+          <p class="tw-line" data-text="Just saying… you're pretty awesome ❤️"></p>
+          <p class="tw-line" data-text="Sending good vibes and maybe a wink 😉"></p>
+          <p class="tw-line" data-text="Hope u have a great day today ❤️😊"></p>
+          <p class="tw-line" data-text="Stay exactly the way you are… because that's what made you so special in the first place 🥹💖"></p>
+          <p class="tw-line tw-signature" data-text="Yours, always."></p>
+        </div>
       </div>
       <div class="message-garland-bottom" aria-hidden="true">🌹 💖 🌸 💕 🌷 💖 🌹</div>
     </section>

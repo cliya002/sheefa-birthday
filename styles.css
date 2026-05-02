@@ -3238,3 +3238,366 @@ html {
   .audio-btn { width: 44px; height: 44px; }
   .audio-player { padding: 14px; }
 }
+
+
+/* ============================================================
+   BLOOMING TREE — shown when the birthday message unlocks
+   A natural tree that fills in with leaves, flowers, hearts,
+   and butterflies drifting around it.
+   ============================================================ */
+
+.bloom-tree {
+  position: relative;
+  width: min(460px, 95%);
+  margin: 10px auto 18px;
+  aspect-ratio: 1 / 1;
+  max-height: 460px;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 32px rgba(230, 58, 90, 0.18));
+}
+
+.bloom-tree.growing {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bloom-tree-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.bloom-tree-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Draw-in effect for the trunk and branches */
+.bloom-trunk,
+.bloom-branch,
+.bloom-twig {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+}
+
+.bloom-ground {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.bloom-tree.growing .bloom-ground {
+  opacity: 0.7;
+  transition-delay: 200ms;
+}
+
+.bloom-tree.growing .bloom-trunk {
+  animation: bloomDraw 1100ms ease-out forwards;
+}
+
+.bloom-tree.growing .bloom-branch {
+  animation: bloomDraw 800ms ease-out forwards;
+  animation-delay: 600ms;
+}
+
+.bloom-tree.growing .bloom-twig {
+  animation: bloomDraw 600ms ease-out forwards;
+  animation-delay: 1100ms;
+}
+
+@keyframes bloomDraw {
+  from { stroke-dashoffset: 800; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Layer that holds flowers, leaves, hearts */
+.bloom-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Separate layer for butterflies so they drift over the entire tree */
+.bloom-butterflies {
+  position: absolute;
+  inset: -8% -4% -4% -4%;  /* slightly overflows so butterflies can enter from sides */
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Grass tufts at the base — gentle sway */
+.bloom-grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 8%;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+}
+
+.bloom-tree.growing .bloom-grass {
+  opacity: 0.9;
+  transform: translateY(0);
+  transition-delay: 400ms;
+}
+
+.bloom-grass span {
+  animation: grassSway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.bloom-grass span:nth-child(even) { animation-delay: 0.6s; }
+.bloom-grass span:nth-child(3n) { animation-delay: 1.2s; font-size: 1.3rem; }
+
+@keyframes grassSway {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(4deg); }
+}
+
+/* Each bloom — flowers, leaves, hearts pop into place and sway gently */
+.bloom-item {
+  position: absolute;
+  font-size: 1.5rem;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 4px rgba(230, 58, 90, 0.25));
+  animation:
+    bloomPop 650ms cubic-bezier(0.2, 1.5, 0.45, 1) forwards,
+    bloomSway 4.5s ease-in-out infinite;
+  animation-delay: 0s, var(--sway-delay, 0s);
+}
+
+@keyframes bloomPop {
+  0%   { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(0); opacity: 0; }
+  70%  { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(calc(var(--scale, 1) * 1.15)); opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--scale, 1)); opacity: 1; }
+}
+
+@keyframes bloomSway {
+  0%, 100% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) - 4deg)) scale(var(--scale, 1)); }
+  50%      { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) + 4deg)) scale(var(--scale, 1)); }
+}
+
+.bloom-flower { font-size: 1.5rem; }
+.bloom-leaf   { font-size: 1.3rem; filter: drop-shadow(0 2px 3px rgba(60, 120, 60, 0.3)); }
+.bloom-heart  { font-size: 1.15rem; filter: drop-shadow(0 2px 6px rgba(230, 58, 90, 0.5)); }
+
+/* ---------- Butterflies: drifting flight paths around the tree ---------- */
+.bloom-tree-butterfly {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.6rem;
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 3px 8px rgba(230, 58, 90, 0.4));
+}
+
+/* Four distinct, meandering flight paths so multiple butterflies look unique */
+.bloom-tree-butterfly.flight-1 {
+  animation: flightOne 12s ease-in-out infinite, butterflyFlap 0.3s ease-in-out infinite alternate;
+}
+.bloom-tree-butterfly.flight-2 {
+  animation: flightTwo 14s ease-in-out infinite, butterflyFlap 0.28s ease-in-out infinite alternate;
+}
+.bloom-tree-butterfly.flight-3 {
+  animation: flightThree 11s ease-in-out infinite, butterflyFlap 0.32s ease-in-out infinite alternate;
+}
+.bloom-tree-butterfly.flight-4 {
+  animation: flightFour 13s ease-in-out infinite, butterflyFlap 0.26s ease-in-out infinite alternate;
+}
+
+/* Enter from the left, loop around the canopy, exit right, then come back */
+@keyframes flightOne {
+  0%   { transform: translate(-10%, 65%) rotate(-10deg); opacity: 0; }
+  8%   { opacity: 1; }
+  25%  { transform: translate(25%, 30%) rotate(15deg); }
+  45%  { transform: translate(55%, 10%) rotate(-8deg); }
+  65%  { transform: translate(80%, 35%) rotate(12deg); }
+  85%  { transform: translate(60%, 55%) rotate(-15deg); opacity: 1; }
+  100% { transform: translate(110%, 40%) rotate(0deg); opacity: 0; }
+}
+
+@keyframes flightTwo {
+  0%   { transform: translate(100%, 45%) rotate(170deg); opacity: 0; }
+  10%  { opacity: 1; }
+  30%  { transform: translate(70%, 25%) rotate(200deg); }
+  50%  { transform: translate(40%, 5%)  rotate(165deg); }
+  70%  { transform: translate(15%, 30%) rotate(195deg); }
+  90%  { transform: translate(35%, 55%) rotate(170deg); opacity: 1; }
+  100% { transform: translate(-15%, 50%) rotate(180deg); opacity: 0; }
+}
+
+@keyframes flightThree {
+  0%   { transform: translate(45%, -15%) rotate(90deg); opacity: 0; }
+  8%   { opacity: 1; }
+  25%  { transform: translate(25%, 20%) rotate(120deg); }
+  50%  { transform: translate(50%, 45%) rotate(60deg); }
+  75%  { transform: translate(75%, 20%) rotate(110deg); }
+  92%  { transform: translate(55%, -5%) rotate(80deg); opacity: 1; }
+  100% { transform: translate(45%, -20%) rotate(90deg); opacity: 0; }
+}
+
+@keyframes flightFour {
+  0%   { transform: translate(-8%, 20%) rotate(-15deg); opacity: 0; }
+  10%  { opacity: 1; }
+  30%  { transform: translate(30%, 50%) rotate(20deg); }
+  55%  { transform: translate(65%, 25%) rotate(-10deg); }
+  80%  { transform: translate(90%, 55%) rotate(15deg); opacity: 1; }
+  100% { transform: translate(108%, 35%) rotate(0deg); opacity: 0; }
+}
+
+/* Wing-flap: subtle Y scale to simulate wings beating */
+@keyframes butterflyFlap {
+  from { filter: drop-shadow(0 3px 8px rgba(230, 58, 90, 0.4)) brightness(1); }
+  to   { filter: drop-shadow(0 3px 8px rgba(230, 58, 90, 0.4)) brightness(1.15); }
+}
+
+/* Only show the tree while the message is unlocked */
+.message.locked .bloom-tree { display: none; }
+
+/* Responsive tuning */
+@media (max-width: 520px) {
+  .bloom-tree { width: 100%; max-height: 380px; }
+  .bloom-flower { font-size: 1.2rem; }
+  .bloom-leaf   { font-size: 1.05rem; }
+  .bloom-heart  { font-size: 1rem; }
+  .bloom-tree-butterfly { font-size: 1.3rem; }
+  .bloom-grass { font-size: 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom-tree.growing .bloom-trunk,
+  .bloom-tree.growing .bloom-branch,
+  .bloom-tree.growing .bloom-twig {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .bloom-item {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+  }
+  .bloom-tree-butterfly { animation: none; opacity: 0; }
+  .bloom-grass span { animation: none; }
+}
+
+
+/* ============================================================
+   TYPEWRITER MESSAGE
+   Lines appear character-by-character like someone is typing
+   ============================================================ */
+
+.typewriter {
+  font-family: 'Cormorant Garamond', 'Poppins', serif;
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: #4a2a38;
+  font-style: italic;
+  padding: 4px 2px;
+  min-height: 520px; /* reserve space so layout doesn't jump while typing */
+}
+
+.typewriter .tw-line {
+  margin: 0 0 10px;
+  min-height: 1.75em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  word-wrap: break-word;
+}
+
+/* A line becomes visible the moment we start typing into it */
+.typewriter .tw-line.typing,
+.typewriter .tw-line.typed {
+  opacity: 1;
+}
+
+/* First line "Hey you 💕" — the warm greeting */
+.typewriter .tw-line:first-child {
+  font-family: 'Dancing Script', 'Parisienne', cursive;
+  font-size: 1.7rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--rose-dark);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* Second line "Happy Birthday my Sheefa" — the big title line */
+.typewriter .tw-line:nth-child(2) {
+  font-family: 'Dancing Script', 'Parisienne', cursive;
+  font-size: 1.9rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--rose-dark);
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+/* The two short blessing lines — stay centered and tender */
+.typewriter .tw-line:nth-child(3),
+.typewriter .tw-line:nth-child(4) {
+  text-align: center;
+  font-size: 1.15rem;
+}
+
+/* Lines with .tw-pause get a little breath above them */
+.typewriter .tw-line.tw-pause {
+  margin-top: 14px;
+}
+
+/* Signature line — right aligned, hand-written feel */
+.typewriter .tw-signature {
+  text-align: right;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: var(--rose-dark);
+  font-style: normal;
+  margin-top: 18px;
+}
+
+/* Blinking cursor */
+.tw-cursor {
+  display: inline-block;
+  color: var(--rose);
+  font-weight: 400;
+  margin-left: 1px;
+  animation: twBlink 0.9s steps(2) infinite;
+  transform: translateY(-2px);
+}
+
+@keyframes twBlink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Mobile tuning */
+@media (max-width: 520px) {
+  .typewriter { font-size: 1rem; min-height: 620px; }
+  .typewriter .tw-line:first-child { font-size: 1.4rem; }
+  .typewriter .tw-line:nth-child(2) { font-size: 1.55rem; }
+  .typewriter .tw-line:nth-child(3),
+  .typewriter .tw-line:nth-child(4) { font-size: 1rem; }
+  .typewriter .tw-signature { font-size: 1.2rem; }
+}
+
+/* Reduced motion — just show everything without typing */
+@media (prefers-reduced-motion: reduce) {
+  .typewriter .tw-line {
+    opacity: 1;
+  }
+  .tw-cursor { animation: none; opacity: 0; }
+}
