@@ -122,12 +122,37 @@
 })();
 
 /* ====== Birthday state helper ====== */
-function isBirthdayNow() {
-  const now = new Date();
-  return now.getMonth() === 4 && now.getDate() === 10;
+// Everything is calculated in Qatar time (Asia/Qatar, UTC+3, no DST)
+// so the countdown hits zero at midnight in Doha regardless of where the
+// visitor is located.
+const QATAR_TZ = 'Asia/Qatar';
+
+function nowInQatar() {
+  // Returns a Date object whose local fields (year/month/date/hour/etc.)
+  // reflect the current time in Qatar, regardless of the viewer's timezone.
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: QATAR_TZ,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  }).formatToParts(new Date());
+  const get = (t) => parseInt(parts.find(p => p.type === t).value, 10);
+  return {
+    year: get('year'),
+    month: get('month'), // 1-12
+    day: get('day'),
+    hour: get('hour') === 24 ? 0 : get('hour'),
+    minute: get('minute'),
+    second: get('second')
+  };
 }
 
-/* ====== Countdown to Sheefa's birthday: May 10 ====== */
+function isBirthdayNow() {
+  const q = nowInQatar();
+  return q.month === 5 && q.day === 10;
+}
+
+/* ====== Countdown to Sheefa's birthday: May 10, Qatar time ====== */
 (function countdown() {
   const daysEl = document.getElementById('days');
   const hoursEl = document.getElementById('hours');
@@ -138,15 +163,22 @@ function isBirthdayNow() {
   const btnReveal = document.getElementById('btnReveal');
   const messageSection = document.getElementById('messageSection');
 
-  function getTarget() {
-    const now = new Date();
-    let year = now.getFullYear();
-    let target = new Date(year, 4, 10, 0, 0, 0, 0);
-    const endOfBirthday = new Date(year, 4, 10, 23, 59, 59, 999);
-    if (now > endOfBirthday) {
-      target = new Date(year + 1, 4, 10, 0, 0, 0, 0);
-    }
-    return target;
+  // Qatar is UTC+3 with no DST. Target is midnight May 10 in Doha,
+  // which is May 9 at 21:00 UTC.
+  function getTargetUTC() {
+    const q = nowInQatar();
+    let year = q.year;
+    // If we're past end of May 10 in Qatar, roll to next year
+    const pastBirthday =
+      q.month > 5 || (q.month === 5 && q.day > 10);
+    if (pastBirthday) year += 1;
+    // Midnight May 10 in Qatar = May 9 21:00 UTC
+    return Date.UTC(year, 4, 9, 21, 0, 0, 0);
+  }
+
+  // "Now" as a UTC timestamp using the browser's real clock
+  function nowUTC() {
+    return Date.now();
   }
 
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -159,9 +191,15 @@ function isBirthdayNow() {
   }
 
   function tick() {
-    const now = new Date();
-    const target = getTarget();
-    const diff = target - now;
+    const target = getTargetUTC();
+    const diff = target - nowUTC();
+
+    // Show the live Qatar time for context
+    const q = nowInQatar();
+    const qatarClockEl = document.getElementById('qatarClock');
+    if (qatarClockEl) {
+      qatarClockEl.textContent = `${pad(q.hour)}:${pad(q.minute)}:${pad(q.second)}`;
+    }
 
     if (isBirthdayNow()) {
       daysEl.textContent = '00';
@@ -200,7 +238,7 @@ function isBirthdayNow() {
     }
 
     lockCountdownEl.textContent =
-      `Unlocks in ${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+      `Unlocks in ${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s · Qatar time 🇶🇦`;
   }
 
   tick();

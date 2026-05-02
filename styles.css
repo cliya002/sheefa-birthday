@@ -1070,3 +1070,19 @@ html, body {
   font-style: italic;
   line-height: 1.4;
 }
+
+
+/* ---------- Qatar timezone note ---------- */
+.timezone-note {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #8a5060;
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+}
+
+.timezone-note #qatarClock {
+  font-weight: 600;
+  color: var(--rose-dark);
+  font-variant-numeric: tabular-nums;
+}
