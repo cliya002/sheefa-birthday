@@ -27,14 +27,8 @@
     mainCard.classList.remove('hidden');
     try { sessionStorage.setItem(UNLOCKED_KEY, '1'); } catch (e) {}
     setTimeout(() => gate.remove(), 700);
-
-    // Auto-play the love song as a welcome gift 🎵
-    // (Works because the user just clicked Unlock — browser allows autoplay with sound)
-    setTimeout(() => {
-      if (typeof window.__openMusicPlayer === 'function') {
-        window.__openMusicPlayer();
-      }
-    }, 900);
+    // Music was already started synchronously in the submit handler
+    // (required for iOS autoplay compatibility).
   }
 
   // Auto-unlock if already entered this session
@@ -60,6 +54,15 @@
       errorEl.textContent = "That's you 💖 Welcome…";
       errorEl.style.color = '#b91d3a';
       errorEl.style.opacity = '1';
+
+      // CRITICAL for iOS: start the audio RIGHT NOW, synchronously inside
+      // the submit handler (still within the user gesture context).
+      // If we wait for setTimeout, iOS treats the gesture as expired and blocks audio.
+      if (typeof window.__openMusicPlayer === 'function') {
+        window.__openMusicPlayer();
+      }
+
+      // Visual unlock runs after a brief delay so the "Welcome" message is seen
       setTimeout(unlock, 700);
     } else {
       errorEl.textContent = "Hmm, that's not it. Try again 💔";
@@ -669,30 +672,38 @@ function heartBurst(count = 20) {
     return false;
   }
 
+  // iOS Safari blocks audio.play() unless called SYNCHRONOUSLY inside
+  // a user gesture handler. openPlayer gets called from exactly that
+  // context (the Unlock button click and the music toggle click), so
+  // we must call .play() immediately — no setTimeout, no async wait.
   function openPlayer() {
     panel.classList.add('open');
 
-    // Force the song to begin at 0:40 every time the player opens
-    // (including the auto-open that happens right after unlock).
-    const startFromOffset = () => {
+    // 1. Kick off playback right now (synchronous, inside the gesture)
+    const playPromise = audio.play();
+
+    // 2. After it starts, seek to 0:40 — iOS accepts seeks on a playing element
+    const doSeek = () => {
       if (!seekToStart()) {
-        // Metadata not yet loaded — wait for it, seek, then play
         const onReady = () => {
           seekToStart();
-          play();
           audio.removeEventListener('loadedmetadata', onReady);
           audio.removeEventListener('canplay', onReady);
         };
         audio.addEventListener('loadedmetadata', onReady);
         audio.addEventListener('canplay', onReady);
-        // Kick the browser to start loading metadata
-        audio.load();
-      } else {
-        play();
       }
     };
 
-    startFromOffset();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.then(doSeek).catch(() => {
+        // Autoplay blocked (iOS low-power mode etc). Still seek so
+        // whenever the user hits play manually, it starts at 0:40.
+        doSeek();
+      });
+    } else {
+      doSeek();
+    }
   }
 
   function closePlayer() {
