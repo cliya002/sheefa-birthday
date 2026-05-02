@@ -58,8 +58,9 @@
       // CRITICAL for iOS: start the audio RIGHT NOW, synchronously inside
       // the submit handler (still within the user gesture context).
       // If we wait for setTimeout, iOS treats the gesture as expired and blocks audio.
-      if (typeof window.__openMusicPlayer === 'function') {
-        window.__openMusicPlayer();
+      // Play in the background without showing the player panel.
+      if (typeof window.__startMusicSilently === 'function') {
+        window.__startMusicSilently();
       }
 
       // Visual unlock runs after a brief delay so the "Welcome" message is seen
@@ -665,6 +666,12 @@ function heartBurst(count = 20) {
     play();
   }
 
+  // Start playback WITHOUT opening the panel — used on unlock so the
+  // music plays in the background and the panel stays hidden.
+  function startMusicSilently() {
+    play();
+  }
+
   function closePlayer() {
     panel.classList.remove('open');
     pause();
@@ -689,6 +696,7 @@ function heartBurst(count = 20) {
 
   // Expose so the password gate can auto-play after unlock
   window.__openMusicPlayer = openPlayer;
+  window.__startMusicSilently = startMusicSilently;
 })();
 
 /* ====== Why You're Special button ====== */
