@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday, Sheefa 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div class="gate" id="passwordGate">
+    <div class="gate-hearts" aria-hidden="true"></div>
+    <div class="gate-box">
+      <div class="gate-icon">🔐</div>
+      <h2 class="gate-title">A little something for <span>Sheefa</span></h2>
+      <p class="gate-subtitle">Enter the password to continue 💕</p>
+      <form id="gateForm" autocomplete="off">
+        <input
+          type="password"
+          id="gateInput"
+          class="gate-input"
+          placeholder="Enter password"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" class="gate-btn">Unlock 💖</button>
+      </form>
+      <p class="gate-error" id="gateError"></p>
+      <p class="gate-hint-text">Hint: your name + your special day 🌹</p>
+    </div>
+  </div>
+
+  <!-- Floating hearts background -->
+  <div class="hearts" aria-hidden="true"></div>
+
+  <!-- Petals background -->
+  <div class="petals" aria-hidden="true"></div>
+
+  <main class="card hidden" id="mainCard">
+    <header class="hero">
+      <p class="eyebrow">May 10th · A day just for you</p>
+      <h1 class="title">
+        Happy Birthday<br />
+        <span class="name">Sheefa</span>
+        <span class="emoji">🎂🥹</span>
+      </h1>
+      <p class="subtitle">My forever · My future · My favorite person</p>
+    </header>
+
+    <!-- Photo frame -->
+    <figure class="photo-frame">
+      <div class="photo-glow"></div>
+      <img src="preview.webp" alt="Sheefa holding a beautiful bouquet of red roses and white flowers" />
+      <figcaption>For the one who made life softer ❤️</figcaption>
+    </figure>
+
+    <!-- Countdown -->
+    <section class="countdown-section" aria-label="Countdown to birthday">
+      <h2 class="section-title">Counting down to your special day</h2>
+      <div class="countdown" id="countdown">
+        <div class="time-box"><span id="days">--</span><small>Days</small></div>
+        <div class="time-box"><span id="hours">--</span><small>Hours</small></div>
+        <div class="time-box"><span id="minutes">--</span><small>Minutes</small></div>
+        <div class="time-box"><span id="seconds">--</span><small>Seconds</small></div>
+      </div>
+      <p class="countdown-msg" id="countdownMsg"></p>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="actions" aria-label="Things to do">
+      <button class="btn btn-primary" id="btnReveal" disabled>
+        <span class="btn-icon">🔒</span>
+        <span class="btn-text">Unlock Birthday Message</span>
+      </button>
+
+      <div class="btn-grid">
+        <button class="btn btn-secondary" id="btnWish">
+          <span class="btn-icon">🌟</span>
+          <span class="btn-text">Make a Wish</span>
+        </button>
+        <button class="btn btn-secondary" id="btnHearts">
+          <span class="btn-icon">💖</span>
+          <span class="btn-text">Send Love</span>
+        </button>
+        <button class="btn btn-secondary" id="btnSong">
+          <span class="btn-icon">🎵</span>
+          <span class="btn-text">Play Our Song</span>
+        </button>
+        <button class="btn btn-secondary" id="btnReasons">
+          <span class="btn-icon">💌</span>
+          <span class="btn-text">Why You're Special</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- The message (hidden until birthday) -->
+    <section class="message locked" id="messageSection" aria-hidden="true">
+      <div class="locked-overlay">
+        <div class="lock-icon">🔒</div>
+        <h3>This message unlocks on May 10th</h3>
+        <p id="lockCountdown">Come back on your birthday, Sheefa 💕</p>
+      </div>
+      <div class="message-inner">
+        <p class="greeting">Happy birthday my Sheefa 🎂🥹</p>
+
+        <p>I don't even know where to start… I just want you to be truly happy. Not just today, but in every part of your life.</p>
+
+        <p>You deserve a kind of happiness that's calm, real, and lasting… the kind that doesn't fade. And I hope this year brings you nothing but peace, love, and everything beautiful you've been wishing for.</p>
+
+        <p>I'm really grateful I got to know you… you came into my life so unexpectedly, but somehow you became someone really special to me.</p>
+
+        <p>No matter where life takes us… I'll always wish the best for you, Sheefa. Stay exactly the way you are… because that's what made you so special to me in the first place ❤️🥹</p>
+
+        <p class="signature">Yours, always.</p>
+      </div>
+    </section>
+
+    <!-- Cake -->
+    <div class="cake-wrap" id="cakeWrap" title="Click the cake to blow the candles 💨">
+      <div class="cake">
+        <div class="plate"></div>
+        <div class="layer layer-bottom"></div>
+        <div class="layer layer-middle"></div>
+        <div class="layer layer-top"></div>
+        <div class="candle">
+          <div class="flame"></div>
+        </div>
+      </div>
+      <p class="cake-hint">Tap the cake to make a wish ✨</p>
+    </div>
+
+    <footer class="footer">
+      <p>Made with 💖 for Sheefa · May 10th</p>
+    </footer>
+  </main>
+
+  <!-- Floating music player -->
+  <div class="music-player" id="musicPlayer">
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+      <span class="music-icon">🎵</span>
+      <span class="music-pulse"></span>
+    </button>
+    <div class="music-panel" id="musicPanel">
+      <div class="music-header">
+        <div>
+          <p class="music-song">Our Song 💕</p>
+          <p class="music-artist">A Tamil love song, just for you</p>
+        </div>
+        <button class="music-close" id="musicClose" aria-label="Close">✕</button>
+      </div>
+      <div class="music-embed" id="musicEmbed">
+        <!-- YouTube iframe loads here when opened -->
+      </div>
+      <p class="music-note">A little Tamil love, just for you 💕</p>
+    </div>
+  </div>
+
+  <!-- Generic popup -->
+  <div class="wish-overlay" id="popupOverlay">
+    <div class="wish-box">
+      <h3 id="popupTitle">Make a wish, Sheefa 🌟</h3>
+      <p id="popupMessage">Whatever you wished for… I hope it finds you.</p>
+      <button id="closePopup">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
