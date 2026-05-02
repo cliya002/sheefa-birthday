@@ -94,31 +94,87 @@
   }, 900);
 })();
 
-/* ====== Floating hearts & petals ====== */
+/* ====== Floating hearts, petals, roses, sakura, sparkles ====== */
 (function spawnFloaties() {
   const heartsContainer = document.querySelector('.hearts');
   const petalsContainer = document.querySelector('.petals');
+  const rosesContainer = document.querySelector('.roses');
+  const sakuraContainer = document.querySelector('.sakura');
+  const sparklesContainer = document.querySelector('.sparkles');
 
-  function spawn(container, className) {
+  const ROSES = ['🌹', '🌷', '🌺', '🌸', '🌼', '💐'];
+
+  function spawn(container, className, opts = {}) {
     const el = document.createElement('span');
     el.className = className;
     el.style.left = Math.random() * 100 + 'vw';
-    const size = 12 + Math.random() * 18;
-    el.style.transform += ` scale(${(size / 20).toFixed(2)})`;
-    const duration = 8 + Math.random() * 10;
+    const size = opts.minSize + Math.random() * (opts.maxSize - opts.minSize);
+    if (opts.useTransformScale !== false) {
+      el.style.transform = (el.style.transform || '') + ` scale(${(size / opts.baseSize).toFixed(2)})`;
+    }
+    const duration = opts.minDur + Math.random() * (opts.maxDur - opts.minDur);
     el.style.animationDuration = duration + 's';
-    el.style.animationDelay = (Math.random() * 4) + 's';
+    el.style.animationDelay = (Math.random() * (opts.maxDelay || 4)) + 's';
+    if (opts.text) el.textContent = opts.text;
     container.appendChild(el);
     setTimeout(() => el.remove(), (duration + 5) * 1000);
+    return el;
   }
 
-  setInterval(() => spawn(heartsContainer, 'heart'), 700);
-  setInterval(() => spawn(petalsContainer, 'petal'), 900);
+  // Hearts (existing)
+  setInterval(() => spawn(heartsContainer, 'heart', {
+    minSize: 12, maxSize: 30, baseSize: 20, minDur: 8, maxDur: 18
+  }), 500);
 
-  for (let i = 0; i < 8; i++) {
-    setTimeout(() => spawn(heartsContainer, 'heart'), i * 200);
-    setTimeout(() => spawn(petalsContainer, 'petal'), i * 250);
+  // Petals (existing)
+  setInterval(() => spawn(petalsContainer, 'petal', {
+    minSize: 14, maxSize: 28, baseSize: 20, minDur: 9, maxDur: 19
+  }), 700);
+
+  // Floating roses and flower emojis
+  setInterval(() => {
+    const rose = spawn(rosesContainer, 'rose-item', {
+      minSize: 1.2, maxSize: 2.4, baseSize: 1.6,
+      minDur: 12, maxDur: 22, useTransformScale: false,
+      text: ROSES[Math.floor(Math.random() * ROSES.length)]
+    });
+    rose.style.fontSize = (1.2 + Math.random() * 1.4) + 'rem';
+  }, 1200);
+
+  // Sakura petals drifting down
+  setInterval(() => spawn(sakuraContainer, 'sakura-petal', {
+    minSize: 12, maxSize: 22, baseSize: 18, minDur: 10, maxDur: 20
+  }), 600);
+
+  // Sparkles twinkling at random positions
+  function spawnSparkle() {
+    const el = document.createElement('span');
+    el.className = 'sparkle';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.top = Math.random() * 100 + 'vh';
+    el.style.animationDelay = (Math.random() * 2) + 's';
+    el.style.animationDuration = (2 + Math.random() * 2) + 's';
+    sparklesContainer.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
   }
+  setInterval(spawnSparkle, 400);
+
+  // Initial burst so the page feels alive on load
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => spawn(heartsContainer, 'heart', {
+      minSize: 12, maxSize: 30, baseSize: 20, minDur: 8, maxDur: 18
+    }), i * 150);
+    setTimeout(() => spawn(petalsContainer, 'petal', {
+      minSize: 14, maxSize: 28, baseSize: 20, minDur: 9, maxDur: 19
+    }), i * 180);
+    setTimeout(() => spawn(sakuraContainer, 'sakura-petal', {
+      minSize: 12, maxSize: 22, baseSize: 18, minDur: 10, maxDur: 20
+    }), i * 200);
+    setTimeout(spawnSparkle, i * 120);
+  }
+
+  // Expose heart container for other modules (heartBurst uses this)
+  window.__heartsContainer = heartsContainer;
 })();
 
 /* ====== Birthday state helper ====== */
