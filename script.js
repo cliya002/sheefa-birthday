@@ -104,6 +104,22 @@
 
   const ROSES = ['🌹', '🌷', '🌺', '🌸', '🌼', '💐'];
 
+  // Detect mobile / low-power devices so we reduce element count
+  const isMobile =
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+    window.innerWidth < 768;
+
+  // Respect reduced-motion preference
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) return;
+
+  // Scale intervals based on device capability
+  const intervals = isMobile
+    ? { hearts: 1400, petals: 1800, roses: 3500, sakura: 1600, sparkle: 900 }
+    : { hearts: 500, petals: 700, roses: 1200, sakura: 600, sparkle: 400 };
+
   function spawn(container, className, opts = {}) {
     const el = document.createElement('span');
     el.className = className;
@@ -121,15 +137,15 @@
     return el;
   }
 
-  // Hearts (existing)
+  // Hearts
   setInterval(() => spawn(heartsContainer, 'heart', {
     minSize: 12, maxSize: 30, baseSize: 20, minDur: 8, maxDur: 18
-  }), 500);
+  }), intervals.hearts);
 
-  // Petals (existing)
+  // Petals
   setInterval(() => spawn(petalsContainer, 'petal', {
     minSize: 14, maxSize: 28, baseSize: 20, minDur: 9, maxDur: 19
-  }), 700);
+  }), intervals.petals);
 
   // Floating roses and flower emojis
   setInterval(() => {
@@ -139,28 +155,31 @@
       text: ROSES[Math.floor(Math.random() * ROSES.length)]
     });
     rose.style.fontSize = (1.2 + Math.random() * 1.4) + 'rem';
-  }, 1200);
+  }, intervals.roses);
 
   // Sakura petals drifting down
   setInterval(() => spawn(sakuraContainer, 'sakura-petal', {
     minSize: 12, maxSize: 22, baseSize: 18, minDur: 10, maxDur: 20
-  }), 600);
+  }), intervals.sakura);
 
-  // Sparkles twinkling at random positions
-  function spawnSparkle() {
-    const el = document.createElement('span');
-    el.className = 'sparkle';
-    el.style.left = Math.random() * 100 + 'vw';
-    el.style.top = Math.random() * 100 + 'vh';
-    el.style.animationDelay = (Math.random() * 2) + 's';
-    el.style.animationDuration = (2 + Math.random() * 2) + 's';
-    sparklesContainer.appendChild(el);
-    setTimeout(() => el.remove(), 5000);
+  // Sparkles twinkling (desktop only — hidden via CSS on mobile)
+  if (!isMobile) {
+    function spawnSparkle() {
+      const el = document.createElement('span');
+      el.className = 'sparkle';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = Math.random() * 100 + 'vh';
+      el.style.animationDelay = (Math.random() * 2) + 's';
+      el.style.animationDuration = (2 + Math.random() * 2) + 's';
+      sparklesContainer.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+    setInterval(spawnSparkle, intervals.sparkle);
   }
-  setInterval(spawnSparkle, 400);
 
-  // Initial burst so the page feels alive on load
-  for (let i = 0; i < 15; i++) {
+  // Initial burst (smaller on mobile)
+  const burstCount = isMobile ? 5 : 15;
+  for (let i = 0; i < burstCount; i++) {
     setTimeout(() => spawn(heartsContainer, 'heart', {
       minSize: 12, maxSize: 30, baseSize: 20, minDur: 8, maxDur: 18
     }), i * 150);
@@ -170,10 +189,8 @@
     setTimeout(() => spawn(sakuraContainer, 'sakura-petal', {
       minSize: 12, maxSize: 22, baseSize: 18, minDur: 10, maxDur: 20
     }), i * 200);
-    setTimeout(spawnSparkle, i * 120);
   }
 
-  // Expose heart container for other modules (heartBurst uses this)
   window.__heartsContainer = heartsContainer;
 })();
 

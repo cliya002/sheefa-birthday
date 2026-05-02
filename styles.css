@@ -1373,3 +1373,219 @@ html, body {
   }
   .divider-line { width: 50px; }
 }
+
+
+/* ============================================================
+   iOS / MOBILE COMPATIBILITY FIXES
+   Fixes quirks on iPhone Safari, iPad, and smaller screens
+   ============================================================ */
+
+/* Force hardware acceleration on animated layers to prevent
+   flickering and jank on iOS Safari */
+.hearts, .petals, .roses, .sakura, .sparkles,
+.heart, .petal, .rose-item, .sakura-petal, .sparkle,
+.corner-flowers, .flower-crown,
+.photo-frame, .photo-glow,
+.time-box, .btn, .card,
+.music-player, .music-panel, .music-toggle {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* Fix: `inset: 0` isn't supported on older iOS. Use explicit offsets. */
+.hearts, .petals, .roses, .sakura, .sparkles,
+.photo-glow, .wish-overlay, .gate, .gate-hearts,
+.locked-overlay, .music-card-overlay {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Fix: `aspect-ratio` is not supported on iOS < 15. Use padding-top hack. */
+.music-embed {
+  aspect-ratio: auto;
+  height: 0;
+  padding-top: 56.25%; /* 16:9 */
+  position: relative;
+}
+
+.music-embed iframe,
+.music-embed .music-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.music-card {
+  aspect-ratio: auto;
+}
+
+/* Fix: iOS Safari needs explicit -webkit- prefix for backdrop-filter */
+.card {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.gate-box {
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.music-panel {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.wish-overlay {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Fix: iOS renders emoji larger than expected — constrain them */
+.corner-flowers .flower,
+.flower-crown span,
+.photo-frame::after,
+.divider-flower,
+.section-title::before,
+.section-title::after {
+  line-height: 1;
+  font-style: normal;
+  text-rendering: optimizeSpeed;
+}
+
+/* Fix: On iPhone the corner flowers often overflow viewport.
+   Make them smaller and constrain overflow. */
+@media (max-width: 768px) {
+  body { overflow-x: hidden; }
+
+  .corner-flowers {
+    width: 90px;
+    height: 90px;
+    opacity: 0.7;
+  }
+
+  .corner-flowers .flower:nth-child(1) { font-size: 1.8rem !important; }
+  .corner-flowers .flower:nth-child(2) { font-size: 1.5rem !important; }
+  .corner-flowers .flower:nth-child(3) { font-size: 1.7rem !important; }
+
+  .corner-tl { top: 0; left: 0; }
+  .corner-tr { top: 0; right: 0; }
+  .corner-bl { bottom: 0; left: 0; }
+  .corner-br { bottom: 0; right: 0; }
+
+  .card::before {
+    /* Gradient border behind the card is expensive on mobile — soften it */
+    filter: blur(3px);
+    opacity: 0.35;
+  }
+}
+
+/* Very small phones (iPhone SE, iPhone 12 mini) */
+@media (max-width: 420px) {
+  .corner-flowers {
+    width: 70px;
+    height: 70px;
+    opacity: 0.55;
+  }
+
+  .corner-flowers .flower:nth-child(1) { font-size: 1.4rem !important; }
+  .corner-flowers .flower:nth-child(2) { font-size: 1.2rem !important; }
+  .corner-flowers .flower:nth-child(3) { font-size: 1.3rem !important; }
+
+  .flower-crown { gap: 4px; margin-bottom: 4px; }
+  .flower-crown span { font-size: 1.2rem !important; }
+  .flower-crown span:nth-child(2) { font-size: 1.5rem !important; }
+  .flower-crown span:nth-child(3) { font-size: 1.7rem !important; }
+  .flower-crown span:nth-child(4) { font-size: 1.5rem !important; }
+
+  .photo-frame::after {
+    content: '🌹 🌸 🌹';
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    top: -18px;
+  }
+
+  .divider-line { width: 40px; }
+  .divider-flower { font-size: 1.1rem; }
+
+  .section-title::before,
+  .section-title::after {
+    font-size: 1rem;
+    margin: 0 6px;
+  }
+}
+
+/* Reduce motion for users who prefer it, and for low-power mode */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+  .hearts, .petals, .roses, .sakura, .sparkles {
+    display: none;
+  }
+}
+
+/* Fix: iOS mobile Safari renders `fixed` positioned elements incorrectly
+   when inside elements that scroll. Ensure floating containers
+   are direct children of <body> and use will-change sparingly on mobile. */
+@media (max-width: 768px) {
+  .heart, .petal, .rose-item, .sakura-petal {
+    will-change: auto; /* Don't force GPU layer on low-end devices */
+  }
+}
+
+/* Hide sparkles on mobile — they're expensive to render */
+@media (max-width: 600px) {
+  .sparkles { display: none; }
+}
+
+/* Fix: iOS sometimes draws pseudo-element gradients with visible seams.
+   The card's glowing border was a common culprit. Make it simpler on small screens. */
+@media (max-width: 600px) {
+  .card::before {
+    background: linear-gradient(135deg, #ffb3c1, #ff8fa3, #ffd4a8);
+    background-size: 100% 100%;
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
+/* Fix: iOS Safari sometimes doesn't render `overflow: hidden` on fixed
+   elements correctly, causing floaties to leave trails. Belt-and-suspenders. */
+.hearts, .petals, .roses, .sakura, .sparkles {
+  -webkit-mask-image: linear-gradient(black, black);
+  mask-image: linear-gradient(black, black);
+}
+
+/* Fix: iPhone address bar squish — use svh (small viewport height) with fallback */
+.gate {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Fix: tap highlight looks ugly on iOS — remove it */
+button, a, .cake-wrap, .photo-frame, .music-toggle {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Fix: prevent iOS zooming on input focus (password field) */
+.gate-input {
+  font-size: 16px; /* iOS won't zoom if font is ≥16px */
+}
+
+/* Fix: Scroll smoothness on iOS */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
+}
