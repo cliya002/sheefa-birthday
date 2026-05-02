@@ -2953,3 +2953,58 @@ html {
     padding: 14px 14px !important;
   }
 }
+
+
+/* ============================================================
+   MAKE "SHEEFA" READABLE
+   The name is the most important word — needs to be clearly legible
+   ============================================================ */
+
+/* Hero title "Sheefa" — switch from squiggly cursive to elegant serif */
+.title .name {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-weight: 600 !important;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  /* Keep the beautiful gradient shine */
+  background: linear-gradient(90deg, #e63a5a, #d4a256, #e63a5a);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  /* Slightly larger since serif reads smaller than cursive */
+  font-size: 1.05em;
+}
+
+/* Hero title "Happy Birthday" text — keep the cursive for mood */
+/* Only the name changes */
+
+/* Gate title "Sheefa" — same elegant serif treatment */
+.gate-title span {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-weight: 600 !important;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* Make the gate title's prefix "for" feel deliberate and smaller,
+   so "Sheefa" is the clear focal point */
+.gate-title {
+  font-family: 'Parisienne', 'Great Vibes', cursive;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gate-title span {
+  font-size: 1.15em; /* bigger than "for" */
+}
+
+/* Mobile tuning — name stays clear */
+@media (max-width: 480px) {
+  .title .name { font-size: 1em; }
+  .gate-title span { font-size: 1.1em; }
+}
