@@ -552,6 +552,10 @@ function heartBurst(count = 20) {
   const volumeSlider = document.getElementById('audioVolume');
   const audioArt = document.querySelector('.audio-art');
 
+  // Start the song at 40 seconds (skip the intro) — a nicer moment to begin
+  const START_AT_SECONDS = 40;
+  let hasSeekedToStart = false;
+
   // Set initial volume
   audio.volume = 0.7;
 
@@ -598,11 +602,16 @@ function heartBurst(count = 20) {
   playBtn.addEventListener('click', togglePlay);
   audio.addEventListener('loadedmetadata', () => {
     durationEl.textContent = formatTime(audio.duration);
+    // Jump to the 0:40 mark once we know the song is long enough
+    if (!hasSeekedToStart && audio.duration > START_AT_SECONDS + 1) {
+      audio.currentTime = START_AT_SECONDS;
+      hasSeekedToStart = true;
+    }
   });
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('ended', () => {
-    // Loop the song so it keeps playing for her
-    audio.currentTime = 0;
+    // Loop back to 0:40 so every replay starts from the same spot
+    audio.currentTime = START_AT_SECONDS;
     play();
   });
 
@@ -654,6 +663,12 @@ function heartBurst(count = 20) {
   // Panel show/hide
   function openPlayer() {
     panel.classList.add('open');
+    // Ensure playback starts at the 0:40 mark on every open
+    if (audio.readyState >= 1 && audio.duration > START_AT_SECONDS + 1) {
+      if (audio.currentTime < START_AT_SECONDS) {
+        audio.currentTime = START_AT_SECONDS;
+      }
+    }
     play();
   }
 
