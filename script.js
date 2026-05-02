@@ -661,15 +661,38 @@ function heartBurst(count = 20) {
   });
 
   // Panel show/hide
+  function seekToStart() {
+    if (audio.duration && audio.duration > START_AT_SECONDS + 1) {
+      audio.currentTime = START_AT_SECONDS;
+      return true;
+    }
+    return false;
+  }
+
   function openPlayer() {
     panel.classList.add('open');
-    // Ensure playback starts at the 0:40 mark on every open
-    if (audio.readyState >= 1 && audio.duration > START_AT_SECONDS + 1) {
-      if (audio.currentTime < START_AT_SECONDS) {
-        audio.currentTime = START_AT_SECONDS;
+
+    // Force the song to begin at 0:40 every time the player opens
+    // (including the auto-open that happens right after unlock).
+    const startFromOffset = () => {
+      if (!seekToStart()) {
+        // Metadata not yet loaded — wait for it, seek, then play
+        const onReady = () => {
+          seekToStart();
+          play();
+          audio.removeEventListener('loadedmetadata', onReady);
+          audio.removeEventListener('canplay', onReady);
+        };
+        audio.addEventListener('loadedmetadata', onReady);
+        audio.addEventListener('canplay', onReady);
+        // Kick the browser to start loading metadata
+        audio.load();
+      } else {
+        play();
       }
-    }
-    play();
+    };
+
+    startFromOffset();
   }
 
   function closePlayer() {
