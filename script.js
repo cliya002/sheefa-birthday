@@ -72,8 +72,19 @@
     }
   });
 
-  // Soft floating hearts on the gate screen
+  // Soft floating hearts and petals on the gate screen
   const gateHearts = gate.querySelector('.gate-hearts');
+  const gatePetals = gate.querySelector('.gate-petals');
+  const gateButterflies = gate.querySelector('.gate-butterflies');
+  const gateSparkles = gate.querySelector('.gate-sparkles');
+
+  const isGateMobile =
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+    window.innerWidth < 768;
+
+  const GATE_PETALS = ['🌸', '🌹', '🌷', '🌺', '🌼', '💐'];
+  const GATE_BUTTERFLIES = ['🦋'];
+
   function spawnGateHeart() {
     if (gate.classList.contains('hidden')) return;
     const el = document.createElement('span');
@@ -84,14 +95,75 @@
     gateHearts.appendChild(el);
     setTimeout(() => el.remove(), (dur + 2) * 1000);
   }
-  for (let i = 0; i < 6; i++) setTimeout(spawnGateHeart, i * 300);
-  const gateInterval = setInterval(() => {
-    if (gate.classList.contains('hidden')) {
-      clearInterval(gateInterval);
-      return;
+
+  function spawnGatePetal() {
+    if (gate.classList.contains('hidden')) return;
+    const el = document.createElement('span');
+    el.className = 'gate-petal';
+    el.textContent = GATE_PETALS[Math.floor(Math.random() * GATE_PETALS.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (1.2 + Math.random() * 1) + 'rem';
+    const dur = 10 + Math.random() * 10;
+    el.style.animationDuration = dur + 's';
+    gatePetals.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 2) * 1000);
+  }
+
+  function spawnGateButterfly() {
+    if (gate.classList.contains('hidden')) return;
+    const el = document.createElement('span');
+    el.className = 'gate-butterfly';
+    el.textContent = GATE_BUTTERFLIES[Math.floor(Math.random() * GATE_BUTTERFLIES.length)];
+    el.style.top = (10 + Math.random() * 70) + 'vh';
+    el.style.fontSize = (1.5 + Math.random() * 0.8) + 'rem';
+    const dur = 15 + Math.random() * 8;
+    el.style.animationDuration = dur + 's';
+    gateButterflies.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 2) * 1000);
+  }
+
+  function spawnGateSparkle() {
+    if (gate.classList.contains('hidden')) return;
+    const el = document.createElement('span');
+    el.className = 'gate-sparkle';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.top = Math.random() * 100 + 'vh';
+    el.style.animationDelay = (Math.random() * 1) + 's';
+    el.style.animationDuration = (2 + Math.random() * 2) + 's';
+    gateSparkles.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+
+  // Initial burst to make the gate feel alive immediately
+  for (let i = 0; i < 8; i++) {
+    setTimeout(spawnGateHeart, i * 200);
+    setTimeout(spawnGatePetal, i * 250);
+    setTimeout(spawnGateSparkle, i * 150);
+  }
+  setTimeout(spawnGateButterfly, 500);
+  setTimeout(spawnGateButterfly, 3000);
+
+  // Ongoing intervals — lighter on mobile
+  const gateIntervals = isGateMobile
+    ? { hearts: 1200, petals: 900, butterflies: 6000, sparkles: 800 }
+    : { hearts: 700, petals: 500, butterflies: 4000, sparkles: 400 };
+
+  const gateHeartInterval = setInterval(spawnGateHeart, gateIntervals.hearts);
+  const gatePetalInterval = setInterval(spawnGatePetal, gateIntervals.petals);
+  const gateButterflyInterval = setInterval(spawnGateButterfly, gateIntervals.butterflies);
+  const gateSparkleInterval = setInterval(spawnGateSparkle, gateIntervals.sparkles);
+
+  // Clean up intervals once the gate closes so they don't run forever
+  const stopGateAnimations = () => {
+    if (gate.classList.contains('hidden') || !document.body.contains(gate)) {
+      clearInterval(gateHeartInterval);
+      clearInterval(gatePetalInterval);
+      clearInterval(gateButterflyInterval);
+      clearInterval(gateSparkleInterval);
+      clearInterval(cleanupCheck);
     }
-    spawnGateHeart();
-  }, 900);
+  };
+  const cleanupCheck = setInterval(stopGateAnimations, 1000);
 })();
 
 /* ====== Floating hearts, petals, roses, sakura, sparkles ====== */

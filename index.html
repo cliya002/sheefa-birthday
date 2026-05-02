@@ -17,22 +17,82 @@
   <!-- Password gate -->
   <div class="gate" id="passwordGate">
     <div class="gate-hearts" aria-hidden="true"></div>
+    <div class="gate-petals" aria-hidden="true"></div>
+    <div class="gate-butterflies" aria-hidden="true"></div>
+    <div class="gate-sparkles" aria-hidden="true"></div>
+
+    <!-- Corner flower bouquets for the gate -->
+    <div class="gate-corner gate-corner-tl" aria-hidden="true">
+      <span>🌹</span><span>🌸</span><span>🌷</span>
+    </div>
+    <div class="gate-corner gate-corner-tr" aria-hidden="true">
+      <span>🌷</span><span>🌺</span><span>🌹</span>
+    </div>
+    <div class="gate-corner gate-corner-bl" aria-hidden="true">
+      <span>🌸</span><span>🌹</span><span>🌼</span>
+    </div>
+    <div class="gate-corner gate-corner-br" aria-hidden="true">
+      <span>🌼</span><span>🌹</span><span>🌷</span>
+    </div>
+
     <div class="gate-box">
-      <div class="gate-icon">🔐</div>
-      <h2 class="gate-title">A little something for <span>Sheefa</span></h2>
-      <p class="gate-subtitle">Enter the password to continue 💕</p>
+      <!-- Flower crown on top of the card -->
+      <div class="gate-crown" aria-hidden="true">
+        <span>🌸</span><span>🌷</span><span>🌹</span><span>🌺</span><span>🌹</span><span>🌷</span><span>🌸</span>
+      </div>
+
+      <!-- Gold corner ornaments -->
+      <span class="gate-flourish tl">❀</span>
+      <span class="gate-flourish tr">❀</span>
+      <span class="gate-flourish bl">❀</span>
+      <span class="gate-flourish br">❀</span>
+
+      <!-- Butterfly on the box -->
+      <span class="gate-butterfly-perch">🦋</span>
+
+      <div class="gate-icon">
+        <span class="gate-icon-lock">🔐</span>
+        <span class="gate-icon-glow"></span>
+      </div>
+
+      <p class="gate-eyebrow">
+        <span>❦</span> A little secret <span>❦</span>
+      </p>
+
+      <h2 class="gate-title">For my dearest <span>Sheefa</span></h2>
+
+      <div class="gate-divider" aria-hidden="true">
+        <span class="gate-divider-line"></span>
+        <span class="gate-divider-heart">♥</span>
+        <span class="gate-divider-line"></span>
+      </div>
+
+      <p class="gate-subtitle">Whisper the secret word to come in 💕</p>
+
       <form id="gateForm" autocomplete="off">
-        <input
-          type="password"
-          id="gateInput"
-          class="gate-input"
-          placeholder="Enter password"
-          autocomplete="off"
-          required
-        />
-        <button type="submit" class="gate-btn">Unlock 💖</button>
+        <div class="gate-input-wrap">
+          <span class="gate-input-flower">🌹</span>
+          <input
+            type="password"
+            id="gateInput"
+            class="gate-input"
+            placeholder="Enter the magic word"
+            autocomplete="off"
+            required
+          />
+          <span class="gate-input-flower right">🌹</span>
+        </div>
+        <button type="submit" class="gate-btn">
+          <span class="gate-btn-icon">💖</span>
+          <span>Unlock My Love</span>
+          <span class="gate-btn-icon">💖</span>
+        </button>
       </form>
       <p class="gate-error" id="gateError"></p>
+
+      <div class="gate-hint-decor" aria-hidden="true">
+        <span>🌸</span> <span>💕</span> <span>🌸</span>
+      </div>
       <p class="gate-hint-text">Hint: your name + your special day 🌹</p>
     </div>
   </div>

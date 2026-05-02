@@ -2088,3 +2088,466 @@ html {
 @media (max-width: 600px) {
   .big-heart { font-size: 1.4rem; }
 }
+
+
+/* ============================================================
+   FANCY PASSWORD GATE
+   ============================================================ */
+
+/* Gate background gets a richer gradient with warm glow */
+.gate {
+  background:
+    radial-gradient(1200px 800px at 20% 10%, #ffd6e4 0%, transparent 55%),
+    radial-gradient(1000px 800px at 80% 20%, #ffd0b8 0%, transparent 50%),
+    radial-gradient(1100px 900px at 50% 100%, #ffe0cc 0%, transparent 60%),
+    radial-gradient(900px 700px at 10% 90%, #ffe8ef 0%, transparent 55%),
+    linear-gradient(180deg, #fff5f6 0%, #fff0e8 50%, #fff5f6 100%);
+}
+
+/* ---------- Animated background layers on the gate ---------- */
+.gate-petals,
+.gate-butterflies,
+.gate-sparkles {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.gate-petal {
+  position: absolute;
+  top: -30px;
+  font-size: 1.6rem;
+  animation: gatePetalFall linear infinite;
+  filter: drop-shadow(0 4px 8px rgba(230, 58, 90, 0.3));
+}
+
+@keyframes gatePetalFall {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translate(50px, 50vh) rotate(180deg); }
+  100% { transform: translate(-50px, 110vh) rotate(360deg); opacity: 0; }
+}
+
+.gate-butterfly {
+  position: absolute;
+  font-size: 2rem;
+  animation: gateFlutter 18s linear infinite;
+  filter: drop-shadow(0 5px 10px rgba(230, 58, 90, 0.4));
+}
+
+@keyframes gateFlutter {
+  0%   { transform: translate(-10vw, 40vh) rotate(-15deg); opacity: 0; }
+  10%  { opacity: 1; }
+  30%  { transform: translate(25vw, 20vh) rotate(20deg); }
+  55%  { transform: translate(55vw, 60vh) rotate(-10deg); }
+  80%  { transform: translate(80vw, 30vh) rotate(25deg); }
+  90%  { opacity: 1; }
+  100% { transform: translate(110vw, 50vh) rotate(0deg); opacity: 0; }
+}
+
+.gate-sparkle {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: radial-gradient(circle, #fff, #ffd6e4 50%, transparent 70%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 14px rgba(255, 255, 255, 0.9),
+    0 0 24px rgba(255, 180, 200, 0.7),
+    0 0 40px rgba(212, 162, 86, 0.4);
+  opacity: 0;
+  animation: gateSparkle 3s ease-in-out infinite;
+}
+
+.gate-sparkle::before,
+.gate-sparkle::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 24px; height: 1.5px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.gate-sparkle::after { transform: translate(-50%, -50%) rotate(90deg); }
+
+@keyframes gateSparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+
+/* ---------- Corner bouquets for the gate ---------- */
+.gate-corner {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.gate-corner span {
+  filter: drop-shadow(0 4px 10px rgba(230, 58, 90, 0.3));
+  animation: sway 4s ease-in-out infinite;
+}
+
+.gate-corner span:nth-child(1) { font-size: 2.6rem; animation-delay: 0s; }
+.gate-corner span:nth-child(2) { font-size: 2rem; animation-delay: 0.8s; }
+.gate-corner span:nth-child(3) { font-size: 2.4rem; animation-delay: 1.6s; }
+
+.gate-corner-tl { top: -10px; left: -10px; transform: rotate(-20deg); }
+.gate-corner-tr { top: -10px; right: -10px; transform: rotate(20deg); }
+.gate-corner-bl { bottom: -10px; left: -10px; transform: rotate(-160deg); }
+.gate-corner-br { bottom: -10px; right: -10px; transform: rotate(160deg); }
+
+/* ---------- The gate box itself ---------- */
+.gate-box {
+  z-index: 3;
+  padding: 70px 36px 36px;
+  border: 2px solid rgba(212, 162, 86, 0.5);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 245, 245, 0.96));
+  box-shadow:
+    0 30px 70px rgba(230, 58, 90, 0.25),
+    0 10px 40px rgba(212, 162, 86, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  max-width: 440px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Rotating gradient glow behind the box */
+.gate-box::before,
+.gate-box::after {
+  content: '❀';
+  position: absolute;
+  font-size: 1.6rem;
+  color: var(--gold);
+  opacity: 0.75;
+  animation: spin 12s linear infinite;
+  z-index: 1;
+}
+
+.gate-box::before { top: 18px; left: 22px; }
+.gate-box::after  { top: 18px; right: 22px; animation-direction: reverse; }
+
+/* Additional gold flourishes at all four corners */
+.gate-flourish {
+  position: absolute;
+  font-size: 1.4rem;
+  color: var(--gold);
+  opacity: 0.6;
+  animation: spin 14s linear infinite;
+  z-index: 1;
+}
+
+.gate-flourish.tl { top: 12px; left: 12px; }
+.gate-flourish.tr { top: 12px; right: 12px; animation-direction: reverse; }
+.gate-flourish.bl { bottom: 12px; left: 12px; animation-direction: reverse; }
+.gate-flourish.br { bottom: 12px; right: 12px; }
+
+/* Hide the old ::before/::after flourishes since we replaced them */
+.gate-box::before { content: none; }
+.gate-box::after { content: none; }
+
+/* ---------- Flower crown on top of the box ---------- */
+.gate-crown {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 4;
+  filter: drop-shadow(0 5px 10px rgba(230, 58, 90, 0.4));
+}
+
+.gate-crown span {
+  display: inline-block;
+  font-size: 1.8rem;
+  animation: crownBounce 3s ease-in-out infinite;
+}
+
+.gate-crown span:nth-child(1) { animation-delay: 0s; font-size: 1.5rem; }
+.gate-crown span:nth-child(2) { animation-delay: 0.15s; font-size: 1.8rem; }
+.gate-crown span:nth-child(3) { animation-delay: 0.3s; font-size: 2.2rem; }
+.gate-crown span:nth-child(4) { animation-delay: 0.45s; font-size: 2.4rem; }
+.gate-crown span:nth-child(5) { animation-delay: 0.6s; font-size: 2.2rem; }
+.gate-crown span:nth-child(6) { animation-delay: 0.75s; font-size: 1.8rem; }
+.gate-crown span:nth-child(7) { animation-delay: 0.9s; font-size: 1.5rem; }
+
+/* ---------- Butterfly perched on the box ---------- */
+.gate-butterfly-perch {
+  position: absolute;
+  top: -6px;
+  right: 24px;
+  font-size: 2rem;
+  z-index: 5;
+  animation: perchFlutter 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(230, 58, 90, 0.4));
+}
+
+@keyframes perchFlutter {
+  0%, 100% { transform: translateY(0) rotate(-8deg) scale(1); }
+  50%      { transform: translateY(-6px) rotate(8deg) scale(1.05); }
+}
+
+/* ---------- Lock icon with glow ---------- */
+.gate-icon {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 18px;
+}
+
+.gate-icon-lock {
+  position: relative;
+  z-index: 2;
+  font-size: 3.4rem;
+  display: inline-block;
+  animation: wiggle 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 12px rgba(230, 58, 90, 0.4));
+}
+
+.gate-icon-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(230, 58, 90, 0.4), transparent 70%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+/* ---------- Eyebrow and ornaments ---------- */
+.gate-eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--rose-dark);
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.gate-eyebrow span {
+  color: var(--gold);
+  font-size: 1rem;
+  animation: twinkleOrnament 3s ease-in-out infinite;
+}
+
+/* ---------- Title ---------- */
+.gate-title {
+  font-family: 'Parisienne', 'Great Vibes', cursive;
+  font-size: 2.8rem;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 8px;
+  text-shadow: 0 3px 14px rgba(230, 58, 90, 0.15);
+}
+
+.gate-title span {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--rose), var(--gold), var(--rose));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 4s linear infinite;
+  position: relative;
+  padding: 0 6px;
+}
+
+.gate-title span::before,
+.gate-title span::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-size: 0.55em;
+  -webkit-text-fill-color: var(--gold);
+  animation: twinkleOrnament 2.5s ease-in-out infinite;
+}
+
+.gate-title span::before { left: -14px; }
+.gate-title span::after  { right: -14px; animation-delay: 1.2s; }
+
+/* ---------- Divider in the gate ---------- */
+.gate-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 14px auto 10px;
+}
+
+.gate-divider-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.gate-divider-heart {
+  color: var(--rose);
+  font-size: 1.2rem;
+  animation: pulseHeart 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(230, 58, 90, 0.5));
+}
+
+/* ---------- Subtitle ---------- */
+.gate-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #7a4a5a;
+  margin-bottom: 24px;
+}
+
+/* ---------- Input with flower accents ---------- */
+.gate-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gate-input-flower {
+  position: absolute;
+  font-size: 1.3rem;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(230, 58, 90, 0.3));
+  animation: sway 3s ease-in-out infinite;
+}
+
+.gate-input-flower:not(.right) { left: 16px; }
+.gate-input-flower.right { right: 16px; animation-delay: 1.5s; }
+
+.gate-input {
+  padding: 14px 52px;
+  border-width: 2px;
+  background: linear-gradient(180deg, #fff, #fff9fa);
+  box-shadow:
+    0 4px 14px rgba(230, 58, 90, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+/* ---------- Unlock button ---------- */
+.gate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 14px 30px;
+  background:
+    linear-gradient(90deg, var(--rose), var(--rose-dark), var(--rose));
+  background-size: 200% auto;
+  animation: shine 5s linear infinite;
+  box-shadow:
+    0 12px 28px rgba(230, 58, 90, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(212, 162, 86, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.gate-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.gate-btn:hover::before {
+  left: 100%;
+}
+
+.gate-btn-icon {
+  display: inline-block;
+  animation: pulseHeart 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.4));
+}
+
+.gate-btn-icon:last-child { animation-delay: 0.7s; }
+
+/* ---------- Hint with decorative flowers ---------- */
+.gate-hint-decor {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.gate-hint-decor span {
+  animation: crownBounce 3s ease-in-out infinite;
+}
+
+.gate-hint-decor span:nth-child(2) { animation-delay: 0.5s; color: var(--rose); }
+.gate-hint-decor span:nth-child(3) { animation-delay: 1s; }
+
+.gate-hint-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #a07080;
+  margin-top: 8px;
+}
+
+/* ---------- Responsive tweaks for the gate ---------- */
+@media (max-width: 520px) {
+  .gate-box {
+    padding: 56px 24px 28px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .gate-title { font-size: 2.2rem; }
+
+  .gate-crown span:nth-child(3),
+  .gate-crown span:nth-child(5) { font-size: 1.8rem; }
+  .gate-crown span:nth-child(4) { font-size: 2rem; }
+
+  .gate-corner {
+    width: 80px;
+    height: 80px;
+  }
+  .gate-corner span:nth-child(1) { font-size: 1.8rem; }
+  .gate-corner span:nth-child(2) { font-size: 1.4rem; }
+  .gate-corner span:nth-child(3) { font-size: 1.6rem; }
+
+  .gate-subtitle { font-size: 1rem; }
+  .gate-btn { font-size: 1.15rem; padding: 12px 24px; }
+
+  .gate-input-flower { font-size: 1.1rem; }
+  .gate-input-flower:not(.right) { left: 12px; }
+  .gate-input-flower.right { right: 12px; }
+  .gate-input { padding: 14px 42px; }
+
+  .gate-butterfly-perch { font-size: 1.6rem; }
+  .gate-icon-lock { font-size: 2.8rem; }
+}
+
+@media (max-width: 380px) {
+  .gate-corner { width: 60px; height: 60px; opacity: 0.6; }
+  .gate-corner span:nth-child(1) { font-size: 1.4rem; }
+  .gate-corner span:nth-child(2) { font-size: 1.1rem; }
+  .gate-corner span:nth-child(3) { font-size: 1.3rem; }
+}
