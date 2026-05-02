@@ -9,7 +9,7 @@
 <title>Happy Birthday, Sheefa 🎂</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;500;600&family=Great+Vibes&family=Parisienne&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -47,6 +47,16 @@
   <div class="roses" aria-hidden="true"></div>
   <div class="sakura" aria-hidden="true"></div>
   <div class="sparkles" aria-hidden="true"></div>
+  <div class="butterflies" aria-hidden="true"></div>
+  <div class="big-hearts" aria-hidden="true"></div>
+
+  <!-- Side vine decorations -->
+  <div class="vine vine-left" aria-hidden="true">
+    <span>🌿</span><span>🌹</span><span>🌿</span><span>🌸</span><span>🌿</span><span>🌷</span><span>🌿</span>
+  </div>
+  <div class="vine vine-right" aria-hidden="true">
+    <span>🌿</span><span>🌷</span><span>🌿</span><span>🌸</span><span>🌿</span><span>🌹</span><span>🌿</span>
+  </div>
 
   <!-- Corner flower bouquets -->
   <div class="corner-flowers corner-tl" aria-hidden="true">
@@ -75,7 +85,16 @@
       <div class="flower-crown" aria-hidden="true">
         <span>🌸</span><span>🌹</span><span>🌷</span><span>🌹</span><span>🌸</span>
       </div>
-      <p class="eyebrow">May 10th · A day just for you</p>
+      <p class="eyebrow">
+        <span class="eyebrow-ornament">❦</span>
+        May 10th · A day just for you
+        <span class="eyebrow-ornament">❦</span>
+      </p>
+      <div class="ribbon-banner" aria-hidden="true">
+        <span class="ribbon-left"></span>
+        <span class="ribbon-text">🌹 With all my love 🌹</span>
+        <span class="ribbon-right"></span>
+      </div>
       <h1 class="title">
         Happy Birthday<br />
         <span class="name">Sheefa</span>
@@ -85,6 +104,8 @@
       <div class="divider" aria-hidden="true">
         <span class="divider-line"></span>
         <span class="divider-flower">🌹</span>
+        <span class="divider-heart">♥</span>
+        <span class="divider-flower">🌹</span>
         <span class="divider-line"></span>
       </div>
     </header>
@@ -92,8 +113,14 @@
     <!-- Photo frame -->
     <figure class="photo-frame">
       <div class="photo-glow"></div>
+      <div class="photo-garland-top" aria-hidden="true">🌸🌹🌷🌺🌹🌸🌷🌹🌺🌸</div>
       <img src="preview.webp" alt="Sheefa holding a beautiful bouquet of red roses and white flowers" />
       <figcaption>For the one who made life softer ❤️</figcaption>
+      <div class="photo-garland-bottom" aria-hidden="true">🌹🌷🌸🌹🌺🌷🌸🌹</div>
+      <span class="photo-corner tl">❀</span>
+      <span class="photo-corner tr">❀</span>
+      <span class="photo-corner bl">❀</span>
+      <span class="photo-corner br">❀</span>
     </figure>
 
     <!-- Countdown -->
@@ -138,12 +165,17 @@
 
     <!-- The message (hidden until birthday) -->
     <section class="message locked" id="messageSection" aria-hidden="true">
+      <div class="message-garland-top" aria-hidden="true">🌹 🌸 🌷 🌺 💕 🌹 💕 🌺 🌷 🌸 🌹</div>
       <div class="locked-overlay">
         <div class="lock-icon">🔒</div>
         <h3>This message unlocks on May 10th</h3>
         <p id="lockCountdown">Come back on your birthday, Sheefa 💕</p>
       </div>
       <div class="message-inner">
+        <div class="message-ornament top-left">❧</div>
+        <div class="message-ornament top-right">❧</div>
+        <div class="message-ornament bottom-left">❧</div>
+        <div class="message-ornament bottom-right">❧</div>
         <p class="greeting">Happy birthday my Sheefa 🎂🥹</p>
 
         <p>I don't even know where to start… I just want you to be truly happy. Not just today, but in every part of your life.</p>
@@ -156,6 +188,7 @@
 
         <p class="signature">Yours, always.</p>
       </div>
+      <div class="message-garland-bottom" aria-hidden="true">🌹 💖 🌸 💕 🌷 💖 🌹</div>
     </section>
 
     <!-- Cake -->
@@ -173,7 +206,11 @@
     </div>
 
     <footer class="footer">
+      <div class="footer-bouquet" aria-hidden="true">
+        <span>🌸</span><span>🌹</span><span>💐</span><span>🌹</span><span>🌸</span>
+      </div>
       <p>Made with 💖 for Sheefa · May 10th</p>
+      <p class="footer-sub">Forever &amp; Always · 🌹💕🌹</p>
     </footer>
   </main>
 

@@ -101,8 +101,12 @@
   const rosesContainer = document.querySelector('.roses');
   const sakuraContainer = document.querySelector('.sakura');
   const sparklesContainer = document.querySelector('.sparkles');
+  const butterfliesContainer = document.querySelector('.butterflies');
+  const bigHeartsContainer = document.querySelector('.big-hearts');
 
   const ROSES = ['🌹', '🌷', '🌺', '🌸', '🌼', '💐'];
+  const BUTTERFLIES = ['🦋', '🦋', '🦋'];
+  const BIG_HEARTS = ['💖', '💕', '❤️', '💗', '💝', '🌹'];
 
   // Detect mobile / low-power devices so we reduce element count
   const isMobile =
@@ -117,8 +121,8 @@
 
   // Scale intervals based on device capability
   const intervals = isMobile
-    ? { hearts: 1400, petals: 1800, roses: 3500, sakura: 1600, sparkle: 900 }
-    : { hearts: 500, petals: 700, roses: 1200, sakura: 600, sparkle: 400 };
+    ? { hearts: 1400, petals: 1800, roses: 3500, sakura: 1600, sparkle: 900, butterfly: 8000, bigHeart: 2500 }
+    : { hearts: 500, petals: 700, roses: 1200, sakura: 600, sparkle: 400, butterfly: 3500, bigHeart: 900 };
 
   function spawn(container, className, opts = {}) {
     const el = document.createElement('span');
@@ -176,6 +180,38 @@
     }
     setInterval(spawnSparkle, intervals.sparkle);
   }
+
+  // Butterflies fluttering across the screen (desktop mainly)
+  if (!isMobile || window.innerWidth > 600) {
+    function spawnButterfly() {
+      const el = document.createElement('span');
+      el.className = 'butterfly';
+      el.textContent = BUTTERFLIES[Math.floor(Math.random() * BUTTERFLIES.length)];
+      el.style.top = (10 + Math.random() * 70) + 'vh';
+      el.style.animationDuration = (12 + Math.random() * 8) + 's';
+      el.style.animationDelay = (Math.random() * 2) + 's';
+      el.style.fontSize = (1.4 + Math.random() * 0.8) + 'rem';
+      butterfliesContainer.appendChild(el);
+      setTimeout(() => el.remove(), 22000);
+    }
+    setInterval(spawnButterfly, intervals.butterfly);
+    // Start one immediately
+    setTimeout(spawnButterfly, 1000);
+  }
+
+  // Big floating hearts
+  function spawnBigHeart() {
+    const el = document.createElement('span');
+    el.className = 'big-heart';
+    el.textContent = BIG_HEARTS[Math.floor(Math.random() * BIG_HEARTS.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (1.4 + Math.random() * 1.2) + 'rem';
+    el.style.animationDuration = (10 + Math.random() * 8) + 's';
+    el.style.animationDelay = (Math.random() * 2) + 's';
+    bigHeartsContainer.appendChild(el);
+    setTimeout(() => el.remove(), 20000);
+  }
+  setInterval(spawnBigHeart, intervals.bigHeart);
 
   // Initial burst (smaller on mobile)
   const burstCount = isMobile ? 5 : 15;
