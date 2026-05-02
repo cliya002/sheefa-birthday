@@ -2551,3 +2551,276 @@ html {
   .gate-corner span:nth-child(2) { font-size: 1.1rem; }
   .gate-corner span:nth-child(3) { font-size: 1.3rem; }
 }
+
+
+/* ============================================================
+   GATE LAYOUT FIXES
+   Fixes overlapping flowers, awkward wrapping, stray elements
+   ============================================================ */
+
+/* The gate needs to allow scroll when content is tall on small screens */
+.gate {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px 16px;
+}
+
+/* Keep corner bouquets well inside viewport on all screens,
+   and lower their opacity so they don't compete with the card */
+.gate-corner {
+  width: 90px;
+  height: 90px;
+  opacity: 0.55;
+  gap: 2px;
+  z-index: 1;
+}
+
+.gate-corner span:nth-child(1) { font-size: 1.8rem !important; }
+.gate-corner span:nth-child(2) { font-size: 1.4rem !important; }
+.gate-corner span:nth-child(3) { font-size: 1.6rem !important; }
+
+.gate-corner-tl { top: 8px; left: 8px; transform: rotate(-15deg); }
+.gate-corner-tr { top: 8px; right: 8px; transform: rotate(15deg); }
+.gate-corner-bl { bottom: 8px; left: 8px; transform: rotate(-165deg); }
+.gate-corner-br { bottom: 8px; right: 8px; transform: rotate(165deg); }
+
+/* Make sure the box is above the corners and never overflows */
+.gate-box {
+  z-index: 10;
+  max-width: 420px;
+  width: 100%;
+  padding: 56px 28px 30px;
+  overflow: visible;
+}
+
+/* ---------- Flower crown: single clean row ---------- */
+.gate-crown {
+  top: -22px;
+  gap: 4px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  max-width: 92%;
+}
+
+.gate-crown span {
+  font-size: 1.5rem !important;
+  flex-shrink: 0;
+}
+
+.gate-crown span:nth-child(3),
+.gate-crown span:nth-child(5) { font-size: 1.7rem !important; }
+.gate-crown span:nth-child(4) { font-size: 1.9rem !important; }
+
+/* ---------- Butterfly: move to safer spot ---------- */
+.gate-butterfly-perch {
+  top: -14px;
+  right: 18px;
+  font-size: 1.6rem;
+}
+
+/* ---------- Title: no line-wrap awkwardness ---------- */
+.gate-title {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin-bottom: 6px;
+  padding: 0 10px;
+}
+
+.gate-title span {
+  display: inline-block;
+  padding: 0 14px; /* room for ✦ ornaments */
+}
+
+/* ---------- Eyebrow a bit smaller ---------- */
+.gate-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  margin-bottom: 6px;
+}
+
+/* ---------- Divider tighter ---------- */
+.gate-divider {
+  margin: 10px auto 8px;
+}
+
+.gate-divider-line { width: 50px; }
+
+/* ---------- Subtitle smaller, less cramped ---------- */
+.gate-subtitle {
+  font-size: 1rem;
+  margin-bottom: 18px;
+  padding: 0 6px;
+}
+
+/* ---------- Input: put flowers ON THE SIDES properly ---------- */
+.gate-input-wrap {
+  position: relative;
+  width: 100%;
+  display: block; /* not flex — block so absolute children sit correctly */
+}
+
+.gate-input-flower {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  pointer-events: none;
+  z-index: 2;
+  animation: sway 3s ease-in-out infinite;
+}
+
+.gate-input-flower:not(.right) {
+  left: 16px;
+  right: auto;
+}
+
+.gate-input-flower.right {
+  right: 16px;
+  left: auto;
+  animation-delay: 1.5s;
+}
+
+.gate-input {
+  width: 100%;
+  padding: 14px 44px; /* room for the flowers */
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Unlock button: single line, generous width ---------- */
+.gate-btn {
+  width: 100%;
+  font-size: 1.15rem;
+  padding: 14px 20px;
+  white-space: nowrap;
+  gap: 8px;
+}
+
+.gate-btn-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Lock icon: slightly smaller and centered ---------- */
+.gate-icon-lock { font-size: 2.8rem; }
+.gate-icon { margin-bottom: 10px; }
+.gate-icon-glow {
+  width: 80px;
+  height: 80px;
+}
+
+/* ---------- Hint section ---------- */
+.gate-hint-decor {
+  margin-top: 18px;
+  font-size: 0.95rem;
+  gap: 10px;
+}
+
+.gate-hint-text {
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Gold flourishes smaller, more subtle ---------- */
+.gate-flourish {
+  font-size: 1.1rem;
+  opacity: 0.5;
+}
+
+.gate-flourish.tl { top: 10px; left: 12px; }
+.gate-flourish.tr { top: 10px; right: 12px; }
+.gate-flourish.bl { bottom: 10px; left: 12px; }
+.gate-flourish.br { bottom: 10px; right: 12px; }
+
+/* ---------- Small screen specific (iPhone) ---------- */
+@media (max-width: 480px) {
+  .gate { padding: 30px 12px; }
+
+  .gate-box {
+    padding: 50px 22px 26px;
+    border-radius: 24px;
+  }
+
+  .gate-corner {
+    width: 70px;
+    height: 70px;
+    opacity: 0.4;
+  }
+
+  .gate-corner span:nth-child(1) { font-size: 1.4rem !important; }
+  .gate-corner span:nth-child(2) { font-size: 1.1rem !important; }
+  .gate-corner span:nth-child(3) { font-size: 1.3rem !important; }
+
+  .gate-title {
+    font-size: 1.7rem;
+    line-height: 1.2;
+  }
+
+  .gate-title span {
+    display: inline-block;
+    padding: 0 12px;
+  }
+
+  .gate-crown {
+    top: -18px;
+    gap: 3px;
+  }
+
+  .gate-crown span { font-size: 1.2rem !important; }
+  .gate-crown span:nth-child(3),
+  .gate-crown span:nth-child(5) { font-size: 1.4rem !important; }
+  .gate-crown span:nth-child(4) { font-size: 1.55rem !important; }
+
+  .gate-butterfly-perch { font-size: 1.3rem; top: -10px; right: 14px; }
+
+  .gate-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+  }
+
+  .gate-subtitle { font-size: 0.92rem; }
+
+  .gate-input { padding: 13px 38px; letter-spacing: 0.06em; }
+  .gate-input-flower { font-size: 0.95rem; }
+  .gate-input-flower:not(.right) { left: 14px; }
+  .gate-input-flower.right { right: 14px; }
+
+  .gate-btn {
+    font-size: 1.05rem;
+    padding: 13px 16px;
+    gap: 6px;
+  }
+
+  .gate-icon-lock { font-size: 2.4rem; }
+
+  .gate-flourish { font-size: 0.9rem; }
+
+  /* Reduce animated stuff on smaller screens for performance */
+  .gate-butterflies { opacity: 0.6; }
+}
+
+/* Very narrow phones (iPhone SE) */
+@media (max-width: 360px) {
+  .gate-title { font-size: 1.5rem; }
+  .gate-title span { padding: 0 10px; }
+  .gate-btn { font-size: 0.98rem; }
+  .gate-corner { width: 55px; height: 55px; }
+  .gate-corner span:nth-child(1) { font-size: 1.1rem !important; }
+  .gate-corner span:nth-child(2) { font-size: 0.9rem !important; }
+  .gate-corner span:nth-child(3) { font-size: 1rem !important; }
+}
+
+/* ---------- Remove any stray leftover elements ---------- */
+/* Ensure no rogue content floats outside the box */
+.gate-box > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* Keep decorations inside their parent */
+.gate-box,
+.gate-input-wrap,
+.gate-icon {
+  overflow: visible;
+}
