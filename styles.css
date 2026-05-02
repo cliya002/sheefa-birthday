@@ -2824,3 +2824,132 @@ html {
 .gate-icon {
   overflow: visible;
 }
+
+
+/* ============================================================
+   INPUT POLISH — easier to type, more beautiful
+   ============================================================ */
+
+/* Make the input bigger, clearer, and friendlier to tap */
+.gate-input {
+  font-size: 18px !important;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.15em !important;
+  padding: 18px 54px !important;
+  text-align: center;
+  font-weight: 500;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid rgba(230, 58, 90, 0.25);
+  border-radius: 18px;
+  box-shadow:
+    0 6px 18px rgba(230, 58, 90, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  caret-color: var(--rose);
+  min-height: 58px;
+}
+
+/* Placeholder in a softer muted pink, clearly readable */
+.gate-input::placeholder {
+  color: #c9a2ae;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 1; /* override browser defaults */
+}
+
+/* Focus state — vivid rose glow, slight lift */
+.gate-input:focus {
+  outline: none;
+  border-color: var(--rose);
+  box-shadow:
+    0 0 0 4px rgba(230, 58, 90, 0.15),
+    0 10px 24px rgba(230, 58, 90, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+/* When typing, placeholder fades gracefully */
+.gate-input:not(:placeholder-shown) {
+  letter-spacing: 0.2em !important;
+  font-weight: 600;
+  border-color: var(--rose);
+}
+
+/* Flower accents on the sides stay clear of the typing area */
+.gate-input-flower {
+  font-size: 1.3rem !important;
+  opacity: 0.85;
+}
+
+.gate-input-flower:not(.right) { left: 18px !important; }
+.gate-input-flower.right { right: 18px !important; }
+
+/* Form gets tighter, cleaner layout */
+#gateForm {
+  gap: 16px;
+}
+
+/* Make the button bigger and clearer too */
+.gate-btn {
+  min-height: 58px;
+  font-size: 1.25rem !important;
+  padding: 16px 22px !important;
+  letter-spacing: 0.06em;
+  border-radius: 18px;
+  box-shadow:
+    0 14px 32px rgba(230, 58, 90, 0.45),
+    0 4px 10px rgba(212, 162, 86, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.gate-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 8px 20px rgba(230, 58, 90, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile: inputs stay comfortable (iOS won't zoom at >=16px) */
+@media (max-width: 480px) {
+  .gate-input {
+    font-size: 17px !important;
+    padding: 16px 46px !important;
+    letter-spacing: 0.12em !important;
+    min-height: 54px;
+  }
+
+  .gate-input::placeholder {
+    letter-spacing: 0.05em;
+    font-size: 0.95em;
+  }
+
+  .gate-input-flower { font-size: 1.1rem !important; }
+  .gate-input-flower:not(.right) { left: 14px !important; }
+  .gate-input-flower.right { right: 14px !important; }
+
+  .gate-btn {
+    min-height: 54px;
+    font-size: 1.1rem !important;
+    padding: 14px 18px !important;
+    border-radius: 16px;
+  }
+
+  #gateForm { gap: 14px; }
+}
+
+/* Very small phones: keep padding comfortable */
+@media (max-width: 360px) {
+  .gate-input {
+    padding: 16px 42px !important;
+    font-size: 16px !important;
+  }
+
+  .gate-input-flower { font-size: 1rem !important; }
+
+  .gate-btn {
+    font-size: 1.02rem !important;
+    padding: 14px 14px !important;
+  }
+}
