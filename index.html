@@ -218,7 +218,7 @@
         </button>
         <button class="btn btn-secondary" id="btnSong">
           <span class="btn-icon">🎵</span>
-          <span class="btn-text">Play Our Song</span>
+          <span class="btn-text">Play Poo Paadal</span>
         </button>
         <button class="btn btn-secondary" id="btnReasons">
           <span class="btn-icon">💌</span>
@@ -287,14 +287,55 @@
     <div class="music-panel" id="musicPanel">
       <div class="music-header">
         <div>
-          <p class="music-song">Our Song 💕</p>
-          <p class="music-artist">A Tamil love song, just for you</p>
+          <p class="music-song">Poo Paadal 🌸</p>
+          <p class="music-artist">Sean Roldan · From 29</p>
         </div>
         <button class="music-close" id="musicClose" aria-label="Close">✕</button>
       </div>
-      <div class="music-embed" id="musicEmbed">
-        <!-- YouTube iframe loads here when opened -->
+
+      <!-- Custom audio player -->
+      <div class="audio-player" id="audioPlayer">
+        <audio id="songAudio" preload="metadata">
+          <source src="song.mp3" type="audio/mpeg" />
+          Your browser does not support audio playback.
+        </audio>
+
+        <!-- Album art / visual area -->
+        <div class="audio-art" aria-hidden="true">
+          <div class="audio-art-inner">
+            <span class="audio-art-flower">🌹</span>
+            <span class="audio-art-flower">🌸</span>
+            <span class="audio-art-flower">🌷</span>
+            <span class="audio-art-flower">💕</span>
+            <span class="audio-art-center">♫</span>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="audio-controls">
+          <button class="audio-btn audio-play-btn" id="audioPlayBtn" aria-label="Play/Pause">
+            <span class="play-icon">▶</span>
+            <span class="pause-icon">❚❚</span>
+          </button>
+          <div class="audio-progress" id="audioProgress">
+            <div class="audio-progress-bar">
+              <div class="audio-progress-fill" id="audioProgressFill"></div>
+              <div class="audio-progress-thumb" id="audioProgressThumb"></div>
+            </div>
+            <div class="audio-time">
+              <span id="audioCurrent">0:00</span>
+              <span id="audioDuration">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="audio-volume">
+          <span class="audio-volume-icon">🔊</span>
+          <input type="range" id="audioVolume" class="audio-volume-slider"
+                 min="0" max="1" step="0.05" value="0.7" aria-label="Volume" />
+        </div>
       </div>
+
       <p class="music-note">A little Tamil love, just for you 💕</p>
     </div>
   </div>

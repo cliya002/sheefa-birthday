@@ -535,83 +535,131 @@ function heartBurst(count = 20) {
   });
 })();
 
-/* ====== Floating music player (Munbe Vaa — AR Rahman) ====== */
+/* ====== Floating music player (MP3 — Poo Paadal) ====== */
 (function musicPlayer() {
   const toggle = document.getElementById('musicToggle');
   const panel = document.getElementById('musicPanel');
   const closeBtn = document.getElementById('musicClose');
-  const embed = document.getElementById('musicEmbed');
   const songBtn = document.getElementById('btnSong');
 
-  // Video ID from the YouTube embed snippet you provided
-  const VIDEO_ID = 'hIFVPC3wHUM';
-  const VIDEO_SI = 'tj-x9E7rsSX3SzId'; // session identifier that makes embed work
-  const SONG_TITLE = 'Our Song 💕';
-  const SONG_ARTIST = 'A Tamil love song, just for you';
+  const audio = document.getElementById('songAudio');
+  const playBtn = document.getElementById('audioPlayBtn');
+  const progress = document.getElementById('audioProgress');
+  const progressFill = document.getElementById('audioProgressFill');
+  const progressThumb = document.getElementById('audioProgressThumb');
+  const currentEl = document.getElementById('audioCurrent');
+  const durationEl = document.getElementById('audioDuration');
+  const volumeSlider = document.getElementById('audioVolume');
+  const audioArt = document.querySelector('.audio-art');
 
-  let loaded = false;
+  // Set initial volume
+  audio.volume = 0.7;
 
-  function loadIframe(autoplay = true) {
-    if (loaded) return;
-    loaded = true;
-    renderEmbed(autoplay);
+  function formatTime(seconds) {
+    if (!isFinite(seconds)) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
   }
 
-  function renderEmbed(autoplay) {
-    // Use EXACTLY the iframe YouTube generated — proven to work.
-    // We don't add autoplay to the URL because that can trigger Error 153
-    // on some videos. Instead, the user clicks play inside the iframe.
-    embed.innerHTML =
-      `<iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/${VIDEO_ID}?si=${VIDEO_SI}"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen></iframe>`;
+  function updateProgress() {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = pct + '%';
+    progressThumb.style.left = pct + '%';
+    currentEl.textContent = formatTime(audio.currentTime);
   }
 
-  function renderFallback() {
-    const thumb = `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`;
-    embed.innerHTML =
-      `<a class="music-card" href="https://www.youtube.com/watch?v=${VIDEO_ID}" target="_blank" rel="noopener" style="background-image: url('${thumb}');">
-         <div class="music-card-overlay">
-           <div class="music-card-play">▶</div>
-           <div class="music-card-text">
-             <strong>${SONG_TITLE}</strong>
-             <span>Tap to play on YouTube</span>
-           </div>
-         </div>
-       </a>
-       <p class="music-fallback-note">This video can only play on YouTube — but one tap and it opens ✨</p>`;
+  function setProgressFromEvent(e) {
+    const rect = progress.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    if (audio.duration) {
+      audio.currentTime = pct * audio.duration;
+      updateProgress();
+    }
   }
 
-  function unloadIframe() {
-    embed.innerHTML = '';
-    loaded = false;
+  // Play/pause handling
+  function play() {
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => { /* autoplay blocked — user can tap play */ });
+    }
   }
 
-  function openPlayer() {
-    loadIframe(true);
-    panel.classList.add('open');
+  function pause() { audio.pause(); }
+
+  function togglePlay() {
+    if (audio.paused) play();
+    else pause();
+  }
+
+  playBtn.addEventListener('click', togglePlay);
+  audio.addEventListener('loadedmetadata', () => {
+    durationEl.textContent = formatTime(audio.duration);
+  });
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('ended', () => {
+    // Loop the song so it keeps playing for her
+    audio.currentTime = 0;
+    play();
+  });
+
+  audio.addEventListener('play', () => {
+    playBtn.classList.add('playing');
+    audioArt.classList.add('spinning');
     toggle.classList.add('playing');
     if (songBtn) {
       songBtn.classList.add('active');
       songBtn.querySelector('.btn-text').textContent = 'Playing 🎶';
     }
+  });
+
+  audio.addEventListener('pause', () => {
+    playBtn.classList.remove('playing');
+    audioArt.classList.remove('spinning');
+    toggle.classList.remove('playing');
+    if (songBtn) {
+      songBtn.classList.remove('active');
+      songBtn.querySelector('.btn-text').textContent = 'Play Poo Paadal';
+    }
+  });
+
+  // Progress bar scrubbing (click + drag, mouse + touch)
+  let isDragging = false;
+  progress.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    setProgressFromEvent(e);
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) setProgressFromEvent(e);
+  });
+  document.addEventListener('mouseup', () => { isDragging = false; });
+
+  progress.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    setProgressFromEvent(e);
+  }, { passive: true });
+  document.addEventListener('touchmove', (e) => {
+    if (isDragging) setProgressFromEvent(e);
+  }, { passive: true });
+  document.addEventListener('touchend', () => { isDragging = false; });
+
+  // Volume slider
+  volumeSlider.addEventListener('input', () => {
+    audio.volume = parseFloat(volumeSlider.value);
+  });
+
+  // Panel show/hide
+  function openPlayer() {
+    panel.classList.add('open');
+    play();
   }
 
   function closePlayer() {
     panel.classList.remove('open');
-    toggle.classList.remove('playing');
-    // Stop playback by removing the iframe entirely
-    unloadIframe();
-    if (songBtn) {
-      songBtn.classList.remove('active');
-      songBtn.querySelector('.btn-text').textContent = 'Play Song';
-    }
+    pause();
   }
 
   toggle.addEventListener('click', () => {
@@ -631,7 +679,7 @@ function heartBurst(count = 20) {
     }
   });
 
-  // Expose so other modules (like the password gate) can auto-play
+  // Expose so the password gate can auto-play after unlock
   window.__openMusicPlayer = openPlayer;
 })();
 
