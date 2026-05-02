@@ -555,10 +555,6 @@ function heartBurst(count = 20) {
   const volumeSlider = document.getElementById('audioVolume');
   const audioArt = document.querySelector('.audio-art');
 
-  // Start the song at 40 seconds (skip the intro) — a nicer moment to begin
-  const START_AT_SECONDS = 40;
-  let hasSeekedToStart = false;
-
   // Set initial volume
   audio.volume = 0.7;
 
@@ -605,16 +601,11 @@ function heartBurst(count = 20) {
   playBtn.addEventListener('click', togglePlay);
   audio.addEventListener('loadedmetadata', () => {
     durationEl.textContent = formatTime(audio.duration);
-    // Jump to the 0:40 mark once we know the song is long enough
-    if (!hasSeekedToStart && audio.duration > START_AT_SECONDS + 1) {
-      audio.currentTime = START_AT_SECONDS;
-      hasSeekedToStart = true;
-    }
   });
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('ended', () => {
-    // Loop back to 0:40 so every replay starts from the same spot
-    audio.currentTime = START_AT_SECONDS;
+    // Loop the song so it keeps playing for her
+    audio.currentTime = 0;
     play();
   });
 
@@ -664,46 +655,14 @@ function heartBurst(count = 20) {
   });
 
   // Panel show/hide
-  function seekToStart() {
-    if (audio.duration && audio.duration > START_AT_SECONDS + 1) {
-      audio.currentTime = START_AT_SECONDS;
-      return true;
-    }
-    return false;
-  }
-
   // iOS Safari blocks audio.play() unless called SYNCHRONOUSLY inside
   // a user gesture handler. openPlayer gets called from exactly that
   // context (the Unlock button click and the music toggle click), so
   // we must call .play() immediately — no setTimeout, no async wait.
   function openPlayer() {
     panel.classList.add('open');
-
-    // 1. Kick off playback right now (synchronous, inside the gesture)
-    const playPromise = audio.play();
-
-    // 2. After it starts, seek to 0:40 — iOS accepts seeks on a playing element
-    const doSeek = () => {
-      if (!seekToStart()) {
-        const onReady = () => {
-          seekToStart();
-          audio.removeEventListener('loadedmetadata', onReady);
-          audio.removeEventListener('canplay', onReady);
-        };
-        audio.addEventListener('loadedmetadata', onReady);
-        audio.addEventListener('canplay', onReady);
-      }
-    };
-
-    if (playPromise && typeof playPromise.then === 'function') {
-      playPromise.then(doSeek).catch(() => {
-        // Autoplay blocked (iOS low-power mode etc). Still seek so
-        // whenever the user hits play manually, it starts at 0:40.
-        doSeek();
-      });
-    } else {
-      doSeek();
-    }
+    // Start playback from the beginning of the song
+    play();
   }
 
   function closePlayer() {
