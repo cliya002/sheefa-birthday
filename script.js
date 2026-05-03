@@ -930,6 +930,23 @@ function startTypewriter() {
   window.__startMusicSilently = startMusicSilently;
 })();
 
+/* ====== Song meaning toggle (inside music player) ====== */
+(function lyricsToggle() {
+  const toggle = document.getElementById('lyricsToggle');
+  const panel = document.getElementById('lyricsPanel');
+  if (!toggle || !panel) return;
+
+  const textEl = toggle.querySelector('.lyrics-toggle-text');
+
+  toggle.addEventListener('click', () => {
+    const isOpen = panel.classList.toggle('open');
+    toggle.classList.toggle('open', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    textEl.textContent = isOpen ? 'Hide song meaning' : 'See song meaning';
+  });
+})();
+
 /* ====== Why You're Special button ====== */
 (function reasonsButton() {
   const btn = document.getElementById('btnReasons');

@@ -3601,3 +3601,145 @@ html {
   }
   .tw-cursor { animation: none; opacity: 0; }
 }
+
+
+/* ============================================================
+   SONG MEANING — toggleable English translation of Poo Paadal
+   Lives inside the music player panel under the audio controls
+   ============================================================ */
+
+.lyrics-toggle {
+  margin-top: 10px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(230, 58, 90, 0.08), rgba(212, 162, 86, 0.08));
+  color: var(--rose-dark);
+  border: 1px solid rgba(230, 58, 90, 0.18);
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.lyrics-toggle:hover {
+  background: linear-gradient(90deg, rgba(230, 58, 90, 0.14), rgba(212, 162, 86, 0.14));
+  border-color: rgba(230, 58, 90, 0.35);
+  transform: translateY(-1px);
+}
+
+.lyrics-toggle:active {
+  transform: translateY(0);
+}
+
+.lyrics-toggle-icon {
+  font-size: 1rem;
+  filter: drop-shadow(0 1px 2px rgba(230, 58, 90, 0.25));
+}
+
+.lyrics-toggle-chevron {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+  opacity: 0.7;
+}
+
+.lyrics-toggle.open .lyrics-toggle-chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------- The collapsible panel ---------- */
+.lyrics-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease, margin-top 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.lyrics-panel.open {
+  max-height: 560px; /* plenty of room for the translation */
+  margin-top: 10px;
+  opacity: 1;
+}
+
+.lyrics-heading {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.1rem;
+  color: var(--rose-dark);
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lyrics-body {
+  background: linear-gradient(180deg, #fff, #fff5f7);
+  border: 1px dashed rgba(230, 58, 90, 0.3);
+  border-radius: 14px;
+  padding: 14px 14px 16px;
+  max-height: 260px;
+  overflow-y: auto;
+  font-family: 'Cormorant Garamond', 'Poppins', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #4a2a38;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  /* Custom scrollbar — subtle on the rose theme */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(230, 58, 90, 0.4) transparent;
+}
+
+.lyrics-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lyrics-body::-webkit-scrollbar-thumb {
+  background: rgba(230, 58, 90, 0.35);
+  border-radius: 999px;
+}
+
+.lyrics-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lyrics-body p {
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.lyrics-body p:last-child {
+  margin-bottom: 0;
+}
+
+.lyrics-body .lyrics-outro {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(230, 58, 90, 0.15);
+  font-family: 'Dancing Script', cursive;
+  font-style: normal;
+  font-size: 1.1rem;
+  color: var(--rose-dark);
+}
+
+/* Mobile — tighten padding so the panel fits nicely */
+@media (max-width: 480px) {
+  .lyrics-toggle { font-size: 0.8rem; padding: 9px 12px; }
+  .lyrics-body { font-size: 0.9rem; max-height: 220px; padding: 12px; }
+  .lyrics-heading { font-size: 1rem; }
+  .lyrics-panel.open { max-height: 500px; }
+}
+
+/* Reduced motion — snap open instead of animating */
+@media (prefers-reduced-motion: reduce) {
+  .lyrics-panel,
+  .lyrics-toggle-chevron {
+    transition: none;
+  }
+}
