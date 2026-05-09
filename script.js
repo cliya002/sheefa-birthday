@@ -770,7 +770,7 @@ function startTypewriter() {
   });
 })();
 
-/* ====== Floating music player (MP3 — Kangal Edho) ====== */
+/* ====== Floating music player (MP3 — Poo Paadal) ====== */
 (function musicPlayer() {
   const toggle = document.getElementById('musicToggle');
   const panel = document.getElementById('musicPanel');
@@ -857,7 +857,7 @@ function startTypewriter() {
     toggle.classList.remove('playing');
     if (songBtn) {
       songBtn.classList.remove('active');
-      songBtn.querySelector('.btn-text').textContent = 'Play Kangal Edho';
+      songBtn.querySelector('.btn-text').textContent = 'Play Poo Paadal';
     }
   });
 
