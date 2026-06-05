@@ -74,7 +74,6 @@ flowered border on the card. Counts adapt to mobile and to
 ├── styles.css      # Everything visual — ~3700 lines, organized by section
 ├── script.js       # Behavior — gate, countdown, animations, music, etc.
 ├── song.mp3        # Background music (Poo Paadal · Sean Roldan · From 29)
-├── preview.webp    # Photo shown inside the card
 └── README.md       # This file
 ```
 
@@ -154,9 +153,8 @@ gesture context is still valid when `play()` runs.
 
 If you're forking this:
 
-1. **Swap the photo** — replace `preview.webp`
-2. **Swap the song** — replace `song.mp3` (or update the `<source>` tag)
-3. **Update the password** — `script.js` stores a hash:
+1. **Swap the song** — replace `song.mp3` (or update the `<source>` tag)
+2. **Update the password** — `script.js` stores a hash:
    ```js
    const PASSWORD_HASH = -641218737;
    ```
@@ -165,12 +163,12 @@ If you're forking this:
    function simpleHash(str){let h=0;for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}return h;}
    simpleHash('your new password');
    ```
-4. **Update the date** — the countdown is hard-coded to May 10th in
+3. **Update the date** — the countdown is hard-coded to May 10th in
    `script.js` (`q.month === 5 && q.day === 10` and the
    `Date.UTC(year, 4, 9, 21, ...)` target). Change both.
-5. **Update the message** — the typewriter lines are `<p class="tw-line"
+4. **Update the message** — the typewriter lines are `<p class="tw-line"
    data-text="...">` inside `#typewriter` in `index.html`
-6. **Update names / copy** — search for "Sheefa" and "Qatar" in the source
+5. **Update names / copy** — search for "Sheefa" and "Qatar" in the source
    and replace
 
 ---
