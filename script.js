@@ -391,7 +391,7 @@ function isBirthdayNow() {
       hoursEl.textContent = '00';
       minutesEl.textContent = '00';
       secondsEl.textContent = '00';
-      msgEl.textContent = "🎉 It's your day, Sheefa! Happy Birthday 🎂";
+      msgEl.textContent = "🎉 It's your day! Happy Birthday 🎂";
       msgEl.style.fontSize = '1.5rem';
       lockCountdownEl.textContent = "Your message is ready — click the button below 💖";
       unlockButton();
@@ -399,7 +399,7 @@ function isBirthdayNow() {
     }
 
     if (diff <= 0) {
-      msgEl.textContent = "🎉 Happy Birthday, Sheefa! 🎂";
+      msgEl.textContent = "🎉 Happy Birthday! 🎂";
       unlockButton();
       return;
     }
@@ -479,7 +479,7 @@ function heartBurst(count = 20) {
     if (!isBirthdayNow()) {
       popup.show(
         "Not yet, my love 💕",
-        "Your message is sealed until May 10th. Come back on your special day, Sheefa."
+        "Your message is sealed until May 10th. Come back on your special day."
       );
       return;
     }
@@ -737,7 +737,7 @@ function startTypewriter() {
   btn.addEventListener('click', () => {
     heartBurst(15);
     popup.show(
-      "Make a wish, Sheefa 🌟",
+      "Make a wish 🌟",
       "Close your eyes and think of something beautiful…<br/><br/>Whatever you wished for — I hope the universe hears you and sends it right back ✨"
     );
   });
@@ -750,7 +750,7 @@ function startTypewriter() {
     heartBurst(60);
     popup.show(
       "Sending you all my love 💖",
-      "A whole sky full of hearts — just for you, Sheefa."
+      "A whole sky full of hearts — just for you."
     );
   });
 })();
@@ -963,7 +963,7 @@ function startTypewriter() {
 
   btn.addEventListener('click', () => {
     const listHtml = '<ul>' + reasons.map(r => `<li>${r}</li>`).join('') + '</ul>';
-    popup.show("Why you're so special, Sheefa 💌", listHtml);
+    popup.show("Why you're so special 💌", listHtml);
   });
 })();
 
@@ -978,7 +978,7 @@ function startTypewriter() {
 
     setTimeout(() => {
       popup.show(
-        "Make a wish, Sheefa 🌟",
+        "Make a wish 🌟",
         "Whatever you wished for… I hope it finds you."
       );
     }, 600);
