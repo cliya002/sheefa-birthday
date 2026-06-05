@@ -1,4 +1,4 @@
-# 💕 Happy Birthday, Sheefa
+
 
 A small, lovingly hand-built single-page birthday site — a password-locked
 greeting that opens into a countdown, a personal photo, an animated cake,
