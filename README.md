@@ -148,12 +148,6 @@ user-gesture handler. The unlock submit handler therefore calls a
 500ms unlock animation kicks in — no `setTimeout`, no awaits — so the
 gesture context is still valid when `play()` runs.
 
-### Analytics
-Lightweight, privacy-friendly visit tracking via
-[GoatCounter](https://www.goatcounter.com/) — embedded as a single async
-`<script>` tag in `<head>`. Dashboard:
-`https://sheefa-birthday.goatcounter.com/`
-
 ---
 
 ## 💌 Customizing it for someone else
@@ -208,7 +202,6 @@ Made with 💖 — free to fork and adapt for your own loved ones.
 
 - Music: *Poo Paadal* by **Sean Roldan**, from the Tamil film *29*
 - Fonts via **Google Fonts**
-- Analytics via **GoatCounter**
 
 ---
 
